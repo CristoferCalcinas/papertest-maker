@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ExamGenerator: Plataforma para Creación de Exámenes Físicos
 
-## Getting Started
+## Descripción
 
-First, run the development server:
+**ExamGenerator** es una aplicación diseñada para facilitar la creación de exámenes tipo test en formato físico. Permite a los usuarios gestionar bancos de preguntas, generar exámenes personalizados y exportarlos en formatos editables como Word.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Características Principales
+
+- **Autenticación**: Gestión de usuarios y roles.
+- **Banco de Preguntas**: Crear, editar y organizar preguntas con respuestas correctas e incorrectas.
+- **Generación de Exámenes**: Crear documentos en formato A4 con preguntas tipo test.
+- **Exportación de Documentos**: Exportar exámenes en formatos editables para personalización.
+
+## Estructura del Proyecto
+
+El proyecto sigue la arquitectura **Screaming Architecture**, diseñada para reflejar el propósito del sistema:
+
+```
+app/
+├── auth                 # Funcionalidades de autenticación
+├── questions            # Banco de preguntas
+├── exams                # Gestión de exámenes
+├── documents            # Exportación de documentos
+├── layout.tsx           # Layout global
+├── page.tsx             # Página principal
+
+questions/
+├── Question.ts          # Modelo de datos de preguntas
+├── QuestionService.ts   # Lógica de negocio para preguntas
+├── QuestionRepository.ts # Interacción con la base de datos
+
+exams/
+├── Exam.ts              # Modelo de datos de exámenes
+├── ExamService.ts       # Lógica de negocio para exámenes
+├── ExamRepository.ts    # Interacción con la base de datos
+
+shared/
+├── components           # Componentes UI reutilizables
+├── hooks                # Hooks personalizados
+├── utils                # Funciones auxiliares
+├── styles               # Estilos globales
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tecnologías Usadas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: Next.js 15.1.2 con React 19.0.0.
+- **Base de Datos**: PostgreSQL manejado con Prisma.
+- **Estilos**: Tailwind CSS.
+- **Autenticación**: Auth.js para gestión de usuarios y roles.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Instalación y Configuración
 
-## Learn More
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/examgenerator.git
+   ```
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
+3. Configurar las variables de entorno en `.env`.
+4. Ejecutar el servidor en modo desarrollo:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## Próximos Pasos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Implementar la integración con AI para generar opciones incorrectas automáticas.
+- Mejorar las plantillas de exportación de documentos.
+- Agregar soporte para estadísticas avanzadas de preguntas y exámenes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Autor:** Adrián, 2024
