@@ -1,1 +1,4 @@
 AUTH_SECRET="" #npx auth secret
+
+AUTH_GITHUB_ID={clientId}
+AUTH_GITHUB_SECRET={clientSecret}
