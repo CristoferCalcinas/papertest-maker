@@ -1,5 +1,7 @@
+"use client";
+
 // React y Next.js
-import { signIn } from "@/auth";
+import { signIn } from "next-auth/react";
 
 // Componentes UI
 import { Button } from "@/components/ui/button";
@@ -25,20 +27,6 @@ interface LoginOptionProps {
   provider: Provider;
 }
 
-/**
- * Maneja la autenticación social con el proveedor especificado
- * @param provider - Proveedor de autenticación social
- */
-async function handleSocialLogin(provider: Provider) {
-  "use server";
-  try {
-    await signIn(provider);
-  } catch (error) {
-    console.error(`Error al autenticar con ${provider}:`, error);
-    throw error;
-  }
-}
-
 const LoginOption = ({
   name,
   icon: Icon,
@@ -46,21 +34,15 @@ const LoginOption = ({
   provider,
 }: LoginOptionProps) => {
   return (
-    <form
-      action={async () => {
-        "use server"; // Esto asegura que la lógica de servidor sea explícita
-        await handleSocialLogin(provider);
-      }}
+    <Button
+      variant={variant}
+      className="w-full flex items-center justify-center gap-2"
+      type="submit"
+      onClick={() => signIn(provider, { redirectTo: "/" })}
     >
-      <Button
-        variant={variant}
-        className="w-full flex items-center justify-center gap-2"
-        type="submit"
-      >
-        Continuar con {name}
-        <Icon className="w-5 h-5" />
-      </Button>
-    </form>
+      Continuar con {name}
+      <Icon className="w-5 h-5" />
+    </Button>
   );
 };
 
