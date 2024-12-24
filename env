@@ -1,3 +1,5 @@
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/papertest_db"
+
 AUTH_SECRET="" #npx auth secret
 
 AUTH_GITHUB_ID={clientId}
