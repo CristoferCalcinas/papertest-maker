@@ -3,9 +3,14 @@ import GitHub from "next-auth/providers/github";
 // import Google from "next-auth/providers/google";
 // import Facebook from "next-auth/providers/facebook";
 import Credentials from "next-auth/providers/credentials";
+
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "@/prisma";
+
 import { signInSchema } from "./schemas/auth-schemas";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHub,
     // Google,
