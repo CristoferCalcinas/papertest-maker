@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession } from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-// import Facebook from "next-auth/providers/facebook";
+import Facebook from "next-auth/providers/facebook";
 import Credentials from "next-auth/providers/credentials";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -54,7 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub,
     Google,
-    // Facebook,
+    Facebook,
     Credentials({
       authorize: async (credentials) => {
         let user = null;
