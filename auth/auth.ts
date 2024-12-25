@@ -8,6 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/prisma";
 
 import { signInSchema } from "./schemas/auth-schemas";
+import bcryptjs from "bcryptjs";
 
 // ref: https://authjs.dev/getting-started/typescript
 declare module "next-auth" {
@@ -64,18 +65,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         console.log({ email, password });
 
-        // logic to salt and hash password
-        //   const pwHash = saltAndHashPassword(password);
+        user = await prisma.user.findUnique({ where: { email } });
 
-        // logic to verify if the user exists
-        //   user = await getUserFromDb(email, pwHash);
+        if (!user) return null;
 
-        if (!user) {
-          throw new Error("Invalid credentials.");
-        }
+        console.log({ user });
 
-        // return JSON object with the user data
-        return user;
+        if (!bcryptjs.compareSync(password, user.password as string))
+          return null;
+
+        const { password: _, ...userWithoutPassword } = user;
+        console.log({ userWithoutPassword });
+        return userWithoutPassword;
       },
     }),
   ],

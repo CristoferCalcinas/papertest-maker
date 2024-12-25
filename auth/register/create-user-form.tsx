@@ -6,23 +6,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import {
- Form,
- FormControl,
- FormField,
- FormItem,
- FormLabel,
- FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
- Select,
- SelectContent,
- SelectItem,
- SelectTrigger,
- SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
 import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
+
+import {
+  createUserAction,
+  loginWithCredentialsAction,
+} from "../actions/auth-actions";
 
 export const CreateUserForm = () => {
   const router = useRouter();
@@ -38,8 +43,26 @@ export const CreateUserForm = () => {
   });
 
   // change function to handle-action
-  function onSubmit(values: RegisterSchema) {
-    console.log({ values });
+  async function onSubmit(values: RegisterSchema) {
+    const formData = new FormData();
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+    formData.append("name", values.name);
+    formData.append("roleId", values.role);
+    try {
+      const newUser = await createUserAction(formData);
+      if (!newUser) return;
+      const isAutenticated = await loginWithCredentialsAction(
+        newUser.email,
+        values.password
+      );
+      if (!isAutenticated.success) return;
+      // TODO: al realizar la redireccion no se estan cargando los datos del logeo
+      // se puede utlizar el comodin de window.location.replace("/"); ya que asi se recarga la pagina, pero no es buena practica usar eso
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   }
 
   return (
