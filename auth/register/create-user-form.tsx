@@ -14,13 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
 
@@ -38,7 +31,6 @@ export const CreateUserForm = () => {
       name: "",
       email: "",
       password: "",
-      role: "",
     },
   });
 
@@ -48,7 +40,6 @@ export const CreateUserForm = () => {
     formData.append("email", values.email);
     formData.append("password", values.password);
     formData.append("name", values.name);
-    formData.append("roleId", values.role);
     try {
       const newUser = await createUserAction(formData);
       if (!newUser) return;
@@ -112,28 +103,6 @@ export const CreateUserForm = () => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Rol</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccione un rol" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="1">Estudiante</SelectItem>
-                  <SelectItem value="2">Profesor</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

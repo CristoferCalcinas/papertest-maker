@@ -15,9 +15,6 @@ const ERROR_MESSAGES = {
     MIN: "El nombre debe tener al menos 5 caracteres",
     MAX: "El nombre debe tener menos de 50 caracteres",
   },
-  ROLE: {
-    MIN: "Debe seleccionar un rol",
-  },
 } as const;
 
 // Esquemas base reutilizables
@@ -50,11 +47,6 @@ export const registerSchema = z.object({
     .max(50, ERROR_MESSAGES.NAME.MAX),
   email: emailSchema,
   password: passwordSchema,
-  role: z
-    .string({
-      required_error: ERROR_MESSAGES.REQUIRED,
-    })
-    .min(1, ERROR_MESSAGES.ROLE.MIN),
 });
 
 // Tipos inferidos para usar en los componentes
