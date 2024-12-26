@@ -45,3 +45,20 @@ export const createUserAction = async (formData: FormData) => {
     return null;
   }
 };
+
+export const assignRoleAction = async (userId: string, roleId: string) => {
+  try {
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        roleId,
+      },
+    });
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false };
+  }
+};
