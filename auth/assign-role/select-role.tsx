@@ -57,7 +57,7 @@ export const SelectRole = ({ roles, userId }: Props) => {
       setIsLoading(true);
       const resp = await assignRoleAction(userId, data.role);
 
-      if (!resp.success) {
+      if (!resp.ok) {
         throw new Error("Error al asignar el rol");
       }
 

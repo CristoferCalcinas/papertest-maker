@@ -42,12 +42,12 @@ export const CreateUserForm = () => {
     formData.append("name", values.name);
     try {
       const newUser = await createUserAction(formData);
-      if (!newUser) return;
+      if (!newUser.data) return;
       const isAutenticated = await loginWithCredentialsAction(
-        newUser.email,
+        newUser.data.email,
         values.password
       );
-      if (!isAutenticated.success) return;
+      if (!isAutenticated.ok) return;
       router.push("/auth/select-role");
       router.refresh();
     } catch (error) {

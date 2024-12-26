@@ -37,7 +37,7 @@ export const EmailPasswordForm = () => {
         values.email,
         values.password
       );
-      if (!isAutenticated.success) return;
+      if (!isAutenticated.ok) return;
       // TODO: al realizar la redireccion no se estan cargando los datos del logeo
       // se puede utlizar el comodin de window.location.replace("/"); ya que asi se recarga la pagina, pero no es buena practica usar eso
       router.push("/");
