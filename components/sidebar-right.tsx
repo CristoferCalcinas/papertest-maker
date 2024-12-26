@@ -1,9 +1,13 @@
-import * as React from "react"
-import { Plus } from "lucide-react"
+import * as React from "react";
+import { redirect } from "next/navigation";
 
-import { Calendars } from "@/components/calendars"
-import { DatePicker } from "@/components/date-picker"
-import { NavUser } from "@/components/nav-user"
+import { Plus } from "lucide-react";
+
+import { auth } from "@/auth";
+
+import { Calendars } from "@/components/calendars";
+import { DatePicker } from "@/components/date-picker";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -14,15 +18,10 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   calendars: [
     {
       name: "My Calendars",
@@ -37,11 +36,23 @@ const data = {
       items: ["Travel", "Reminders", "Deadlines"],
     },
   ],
-}
+};
 
-export function SidebarRight({
+export async function SidebarRight({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
+  const user = {
+    name: session.user.name ?? "no-name",
+    email: session.user.email ?? "no-email",
+    avatar: session.user.image ?? "https://acortar.link/eNjG5E",
+  };
+
   return (
     <Sidebar
       collapsible="none"
@@ -49,7 +60,7 @@ export function SidebarRight({
       {...props}
     >
       <SidebarHeader className="h-16 border-b border-sidebar-border">
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarHeader>
       <SidebarContent>
         <DatePicker />
@@ -67,5 +78,5 @@ export function SidebarRight({
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
