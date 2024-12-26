@@ -1,57 +1,70 @@
+"use client";
+
+// React y Next.js
+import { signIn } from "next-auth/react";
+
+// Componentes UI
 import { Button } from "@/components/ui/button";
+import type { buttonVariants } from "@/components/ui/button";
+
+// Iconos
 import { FaGithub, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import type { IconType } from "react-icons";
-import type { buttonVariants } from "@/components/ui/button";
+
+// Utilidades
 import { VariantProps } from "class-variance-authority";
 
 type ButtonVariant = NonNullable<
   VariantProps<typeof buttonVariants>["variant"]
 >;
+type Provider = "google" | "facebook" | "github";
 
-interface SocialProvider {
+interface LoginOptionProps {
   name: string;
   icon: IconType;
   variant: ButtonVariant;
-}
-
-interface LoginOptionProps extends SocialProvider {
-  onLogin?: () => Promise<void>;
+  provider: Provider;
 }
 
 const LoginOption = ({
   name,
   icon: Icon,
   variant = "default",
-  onLogin,
+  provider,
 }: LoginOptionProps) => {
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await onLogin?.();
-    } catch (error) {
-      console.error(`Error logging in with ${name}:`, error);
-    }
-  };
-
   return (
-    <form action="">
-      <Button
-        variant={variant}
-        className="w-full flex items-center justify-center gap-2"
-        type="submit"
-      >
-        Continuar con {name}
-        <Icon className="w-5 h-5" />
-      </Button>
-    </form>
+    <Button
+      variant={variant}
+      className="w-full flex items-center justify-center gap-2"
+      type="submit"
+      onClick={() => signIn(provider, { redirectTo: "/" })}
+    >
+      Continuar con {name}
+      <Icon className="w-5 h-5" />
+    </Button>
   );
 };
 
-const SOCIAL_PROVIDERS: SocialProvider[] = [
-  { name: "Google", icon: FcGoogle, variant: "default" },
-  { name: "Facebook", icon: FaFacebook, variant: "default" },
-  { name: "Github", icon: FaGithub, variant: "secondary" },
+const SOCIAL_PROVIDERS: LoginOptionProps[] = [
+  {
+    name: "Google",
+    icon: FcGoogle,
+    variant: "default",
+    provider: "google",
+  },
+  {
+    name: "Facebook",
+    icon: FaFacebook,
+    variant: "default",
+    provider: "facebook",
+  },
+  {
+    name: "Github",
+    icon: FaGithub,
+    variant: "secondary",
+    provider: "github",
+  },
 ] as const;
 
 export const SocialAuthButtons = () => (

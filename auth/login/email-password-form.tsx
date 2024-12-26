@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { SignInSchema, signInSchema } from "../schemas/auth-schemas";
+import { loginWithCredentialsAction } from "../actions/auth-actions";
 
 export const EmailPasswordForm = () => {
   const router = useRouter();
@@ -30,10 +31,21 @@ export const EmailPasswordForm = () => {
   });
 
   // change function to handle-action
-  function onSubmit(values: SignInSchema) {
-    console.log({ values });
+  async function onSubmit(values: SignInSchema) {
+    try {
+      const isAutenticated = await loginWithCredentialsAction(
+        values.email,
+        values.password
+      );
+      if (!isAutenticated.ok) return;
+      // TODO: al realizar la redireccion no se estan cargando los datos del logeo
+      // se puede utlizar el comodin de window.location.replace("/"); ya que asi se recarga la pagina, pero no es buena practica usar eso
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   }
-  
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

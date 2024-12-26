@@ -1,0 +1,12 @@
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/papertest_db"
+
+AUTH_SECRET="" #npx auth secret
+
+AUTH_GITHUB_ID={clientId}
+AUTH_GITHUB_SECRET={clientSecret}
+
+AUTH_GOOGLE_ID={CLIENT_ID}
+AUTH_GOOGLE_SECRET={CLIENT_SECRET}
+
+AUTH_FACEBOOK_ID=""
+AUTH_FACEBOOK_SECRET=""
