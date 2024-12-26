@@ -48,9 +48,8 @@ export const CreateUserForm = () => {
         values.password
       );
       if (!isAutenticated.success) return;
-      // TODO: al realizar la redireccion no se estan cargando los datos del logeo
-      // se puede utlizar el comodin de window.location.replace("/"); ya que asi se recarga la pagina, pero no es buena practica usar eso
-      router.push("/");
+      router.push("/auth/select-role");
+      router.refresh();
     } catch (error) {
       console.error("Login failed", error);
     }
