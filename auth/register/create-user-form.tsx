@@ -21,6 +21,7 @@ import {
   createUserAction,
   loginWithCredentialsAction,
 } from "../actions/auth-actions";
+import { signIn } from "next-auth/react";
 
 export const CreateUserForm = () => {
   const router = useRouter();
@@ -43,13 +44,11 @@ export const CreateUserForm = () => {
     try {
       const newUser = await createUserAction(formData);
       if (!newUser.data) return;
-      const isAutenticated = await loginWithCredentialsAction(
-        newUser.data.email,
-        values.password
-      );
-      if (!isAutenticated.ok) return;
-      router.push("/auth/select-role");
-      router.refresh();
+      await signIn("credentials", {
+        email: newUser.data.email,
+        password: values.password,
+        redirectTo: "/",
+      });
     } catch (error) {
       console.error("Login failed", error);
     }
