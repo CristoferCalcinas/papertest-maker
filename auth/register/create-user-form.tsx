@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+
+import { createUserAction } from "../actions/auth-actions";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,14 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
-
-import {
-  createUserAction,
-  loginWithCredentialsAction,
-} from "../actions/auth-actions";
-import { signIn } from "next-auth/react";
 
 export const CreateUserForm = () => {
   const router = useRouter();
