@@ -42,7 +42,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     session: async ({ session, token, user }) => {
       // console.log({ session, token, user });
-      console.log({ token });
       if (session && session.user) {
         session.user.id = token.id as string;
         session.user.roleId = token.roleId as string;
@@ -63,19 +62,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (!email || !password) return null;
 
-        console.log({ email, password });
-
         user = await prisma.user.findUnique({ where: { email } });
 
         if (!user) return null;
-
-        console.log({ user });
 
         if (!bcryptjs.compareSync(password, user.password as string))
           return null;
 
         const { password: _, ...userWithoutPassword } = user;
-        console.log({ userWithoutPassword });
         return userWithoutPassword;
       },
     }),
