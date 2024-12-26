@@ -1,29 +1,68 @@
 "use server";
 
-import { prisma } from "@/prisma";
 import bcrypt from "bcryptjs";
+
 import { signIn } from "@/auth";
+import { prisma } from "@/prisma";
+
+type ActionResponse<T = void> = {
+  ok: boolean;
+  data?: T;
+  error?: string;
+};
+
+interface CreateUserData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  roleId: string | null;
+}
 
 export const loginWithCredentialsAction = async (
   email: string,
   password: string
-) => {
+): Promise<ActionResponse> => {
   try {
     await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-    return { success: true };
+    return {
+      ok: true,
+    };
   } catch (error) {
     console.log(error);
-    return { success: false };
+    return {
+      ok: false,
+      error: "Credenciales inválidas",
+    };
   }
 };
 
-export const createUserAction = async (formData: FormData) => {
-  const data = Object.fromEntries(formData.entries());
+export const createUserAction = async (
+  formData: FormData
+): Promise<ActionResponse<UserResponse>> => {
+  const data = Object.fromEntries(formData) as unknown as CreateUserData;
+
   try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      return {
+        ok: false,
+        error: "El email ya está registrado",
+      };
+    }
+
     const newUser = await prisma.user.create({
       data: {
         name: data.name as string,
@@ -38,15 +77,26 @@ export const createUserAction = async (formData: FormData) => {
       },
     });
 
-    console.log({ newUser });
-    return newUser;
+    return {
+      ok: true,
+      data: {
+        ...newUser,
+        name: newUser.name ?? "no-name",
+      },
+    };
   } catch (error) {
-    console.log(error);
-    return null;
+    console.error("[Create User Error]:", error);
+    return {
+      ok: false,
+      error: "Error al crear el usuario",
+    };
   }
 };
 
-export const assignRoleAction = async (userId: string, roleId: string) => {
+export const assignRoleAction = async (
+  userId: string,
+  roleId: string
+): Promise<ActionResponse> => {
   try {
     await prisma.user.update({
       where: {
@@ -56,9 +106,9 @@ export const assignRoleAction = async (userId: string, roleId: string) => {
         roleId,
       },
     });
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.log(error);
-    return { success: false };
+    return { ok: false };
   }
 };
