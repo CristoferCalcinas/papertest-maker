@@ -1,19 +1,27 @@
-import { SidebarLeft } from "@/components/sidebar-left"
-import { SidebarRight } from "@/components/sidebar-right"
+import { redirect } from "next/navigation";
+
+import { auth } from "@/auth";
+
+import { SidebarLeft } from "@/components/sidebar-left";
+import { SidebarRight } from "@/components/sidebar-right";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  if (session?.user.roleId === "no-role-id") {
+    redirect("/auth/select-role");
+  }
   return (
     <SidebarProvider>
       <SidebarLeft />
@@ -40,5 +48,5 @@ export default function Page() {
       </SidebarInset>
       <SidebarRight />
     </SidebarProvider>
-  )
+  );
 }
