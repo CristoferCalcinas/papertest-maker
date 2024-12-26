@@ -50,7 +50,7 @@ export async function SidebarRight({
   const user = {
     name: session.user.name ?? "no-name",
     email: session.user.email ?? "no-email",
-    avatar: session.user.image ?? "https://acortar.link/eNjG5E",
+    avatar: session.user.image ?? "/no-photo.jpg",
   };
 
   return (
