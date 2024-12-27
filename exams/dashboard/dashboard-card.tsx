@@ -185,7 +185,7 @@ export const DashBoardCard = () => {
   };
 
   const handleShowLess = () => {
-    setVisibleCards(2);
+    setVisibleCards(1);
   };
 
   const hasMoreCards = visibleCards < exams.length;
