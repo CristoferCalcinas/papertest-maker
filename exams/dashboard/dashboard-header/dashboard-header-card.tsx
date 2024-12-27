@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
 
-import { DashboardItemCard } from "./dashboard-item-card";
+import { DashboardHeaderItemCard } from "./dashboard-header-item-card";
 
 const exams = [
   {
@@ -177,7 +177,7 @@ const exams = [
   },
 ];
 
-export const DashBoardCard = () => {
+export const DashboardHeaderCard = () => {
   const [visibleCards, setVisibleCards] = useState(1);
 
   const handleShowMore = () => {
@@ -195,7 +195,7 @@ export const DashBoardCard = () => {
     <section aria-label="Lista de exámenes" className="max-w-3xl mx-auto">
       <ul className="space-y-6 xl:col-span-3">
         {exams.slice(0, visibleCards).map((exam) => (
-          <DashboardItemCard key={exam.id} {...exam} />
+          <DashboardHeaderItemCard key={exam.id} {...exam} />
         ))}
       </ul>
 
@@ -210,8 +210,9 @@ export const DashBoardCard = () => {
           </button>{" "}
           <button
             onClick={handleShowLess}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black disabled:opacity-50"
             aria-label="Mostrar más exámenes"
+            disabled={visibleCards <= 1}
           >
             Ver menos &nbsp; <FaArrowUpLong />
           </button>

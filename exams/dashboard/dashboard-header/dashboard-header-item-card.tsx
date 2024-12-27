@@ -10,7 +10,7 @@ interface Props {
   title: string;
 }
 
-export const DashboardItemCard = ({
+export const DashboardHeaderItemCard = ({
   createdAt,
   description,
   grade,

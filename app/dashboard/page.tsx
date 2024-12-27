@@ -17,8 +17,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { DashBoardCard } from "@/exams/dashboard/dashboard-card";
-import { DashboardHeader } from "@/exams/dashboard/dashboard-header";
+import { DashboardHeaderCard } from "@/exams/dashboard/dashboard-header/dashboard-header-card";
+import { DashboardHeader } from "@/exams/dashboard/dashboard-header/dashboard-header";
 import { DashboardMain } from "@/exams/dashboard/dashboard-main/dashboard-main";
 
 export default async function Page() {
@@ -48,7 +48,7 @@ export default async function Page() {
         <div className="flex flex-1 flex-col gap-4 p-4">
           <DashboardHeader />
 
-          <DashBoardCard />
+          <DashboardHeaderCard />
 
           <DashboardMain />
         </div>
