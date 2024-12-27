@@ -178,7 +178,7 @@ const exams = [
 ];
 
 export const DashBoardCard = () => {
-  const [visibleCards, setVisibleCards] = useState(2);
+  const [visibleCards, setVisibleCards] = useState(1);
 
   const handleShowMore = () => {
     setVisibleCards((prev) => Math.min(prev + 3, exams.length));
