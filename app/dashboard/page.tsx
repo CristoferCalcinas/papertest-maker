@@ -16,10 +16,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
 import { DashBoardCard } from "@/exams/dashboard/dashboard-card";
-// import { Button } from "@/components/ui/button";
-// import Link from "next/link";
 import { DashboardHeader } from "@/exams/dashboard/dashboard-header";
+import { DashboardMain } from "@/exams/dashboard/dashboard-main/dashboard-main";
 
 export default async function Page() {
   const session = await auth();
@@ -49,7 +49,8 @@ export default async function Page() {
           <DashboardHeader />
 
           <DashBoardCard />
-          <div className="mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50" />
+
+          <DashboardMain />
         </div>
       </SidebarInset>
       <SidebarRight />
