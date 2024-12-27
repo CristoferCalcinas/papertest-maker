@@ -16,6 +16,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { DashBoardCard } from "@/exams/dashboard/dashboard-card";
 
 export default async function Page() {
   const session = await auth();
@@ -42,7 +43,11 @@ export default async function Page() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="mx-auto h-24 w-full max-w-3xl rounded-xl bg-muted/50" />
+          <h1 className="mx-auto text-left text-4xl font-bold w-full max-w-3xl tracking-tighter px-2">
+            Dashboard
+          </h1>
+
+          <DashBoardCard />
           <div className="mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50" />
         </div>
       </SidebarInset>

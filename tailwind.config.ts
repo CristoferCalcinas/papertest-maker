@@ -7,6 +7,7 @@ export default {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./auth/**/*.{js,ts,jsx,tsx,mdx}",
+    "./exams/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {
