@@ -34,8 +34,9 @@ export const DashboardHeaderItemCard = ({
       </figure>
       <article className="max-w-xl flex-auto">
         <header>
-          <h2 className="text-lg/8 font-semibold tracking-tight text-gray-900">
-            {title} &nbsp;
+          <h2 className="text-lg/8 font-semibold tracking-tight text-gray-900 flex items-center justify-between gap-2 pr-5">
+            <span>{title}</span>
+            &nbsp;
             <span className="text-sm text-gray-500">
               Creado:
               {createdAt}
