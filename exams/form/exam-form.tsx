@@ -42,15 +42,18 @@ export const ExamForm = () => {
     if (!form.formState.isValid) return;
 
     toast({
-      title: "You submitted the following values:",
+      title: "Pregunta añadida",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
+      duration: 1500,
     });
 
     addExam(data);
+
+    form.reset();
   }
 
   return (
@@ -65,7 +68,7 @@ export const ExamForm = () => {
           name="question"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className="pl-3">
                 Pregunta
                 <span className="text-red-500">&nbsp;*</span>
               </FormLabel>
@@ -90,7 +93,7 @@ export const ExamForm = () => {
             name="correctAnswer"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>
+                <FormLabel className="pl-3">
                   Respuesta correcta
                   <span className="text-red-500">&nbsp;*</span>
                 </FormLabel>
