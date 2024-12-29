@@ -7,6 +7,8 @@ import { ExamForm } from "@/exams/form/exam-form";
 import { ExamFormDivider } from "@/exams/form/exam-form-divider";
 import { ExamPreview } from "@/exams/preview/exam-preview";
 
+import { BreadcrumbTitle } from "./ui/breadcrumb-title";
+
 export const metadata: Metadata = {
   title: "Crear Nuevo Examen | PaperTest Maker",
   description:
@@ -18,7 +20,15 @@ export default function CreateExamPage() {
   return (
     <main>
       <section
-        className="bg-white py-24 sm:py-32"
+        className="mx-auto max-w-7xl pt-10 pl-5"
+        aria-label="Breadcrumb de navegación"
+      >
+        <BreadcrumbTitle
+        // routePage=""
+        />
+      </section>
+      <section
+        className="bg-white py-8 sm:py-12"
         role="region"
         aria-label="Formulario de creación de examen"
       >
