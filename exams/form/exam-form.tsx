@@ -100,7 +100,7 @@ export const ExamForm = () => {
                     placeholder="Ej: París"
                     {...field}
                     aria-required="true"
-                    className="min-w-[300px]"
+                    className="lg:min-w-[300px]"
                   />
                 </FormControl>
                 {/* <FormDescription>

@@ -36,7 +36,7 @@ export const ExamFormDivider = () => {
 
   return (
     <div
-      className="relative mt-0 md:mt-10"
+      className="relative mt-5 md:mt-10"
       role="toolbar"
       aria-label="Acciones del examen"
     >
