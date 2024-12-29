@@ -84,7 +84,7 @@ export const ExamForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex flex-row-reverse gap-4 items-center justify-evenly">
+        <div className="flex flex-row-reverse gap-4 items-end justify-evenly">
           <FormField
             control={form.control}
             name="correctAnswer"
@@ -100,6 +100,7 @@ export const ExamForm = () => {
                     placeholder="Ej: París"
                     {...field}
                     aria-required="true"
+                    className="min-w-[300px]"
                   />
                 </FormControl>
                 {/* <FormDescription>
