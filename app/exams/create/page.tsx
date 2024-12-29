@@ -25,16 +25,16 @@ export default function CreateExamPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 sm:gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             {/* Columna izquierda: Preview */}
-            <article className="lg:pr-4 w-full h-full">
+            <article className="lg:pr-4 w-full h-full order-last lg:order-first">
               <ExamPreview />
             </article>
 
             {/* Columna derecha: Formulario fijo */}
-            <div className="relative">
+            <div className="block w-full lg:relative order-first lg:order-last">
               {/* Este div actúa como placeholder para mantener el espacio */}
-              <div className="h-[600px]" />
+              <div className="hidden lg:h-[600px]" />
               {/* Formulario fijo */}
-              <article className="fixed top-1/2 w-full max-w-lg -translate-y-1/2 p-2 border border-gray-200 rounded-lg bg-white shadow-sm">
+              <article className="lg:fixed lg:top-1/2 w-full lg:max-w-lg lg:-translate-y-1/2 p-2 border border-gray-200 rounded-lg bg-white shadow-sm">
                 <div className="text-base/7 text-gray-700">
                   <h1 className="text-base/7 font-semibold text-indigo-600">
                     Nombre del Examen ?
