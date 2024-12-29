@@ -88,7 +88,7 @@ export const InputExam = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">
+          <Button type="submit" disabled={!form.formState.isValid}>
             <span>Guardar</span>
           </Button>
         </div>
