@@ -100,8 +100,8 @@ export function ExamCard({
           )}
         </AnimatePresence>
       </CardContent>
-      <CardFooter className="flex justify-between items-center">
-        <div className="text-sm text-muted-foreground">
+      <CardFooter className="flex flex-col-reverse justify-between items-center md:flex-row">
+        <div className="text-xs text-muted-foreground mt-2 md:mt-0 md:text-sm">
           Creado el&nbsp;
           {formatDate(createdAt)}
         </div>
