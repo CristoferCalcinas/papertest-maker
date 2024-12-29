@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useExamStore } from "./store/create-exam-store";
 
 const FormSchema = z.object({
   question: z.string().min(5, {
@@ -35,7 +36,12 @@ export const InputExam = () => {
     },
   });
 
+  const addExam = useExamStore((state) => state.addExam);
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
+
+    if(!form.formState.isValid) return;
+
     toast({
       title: "You submitted the following values:",
       description: (
@@ -44,6 +50,8 @@ export const InputExam = () => {
         </pre>
       ),
     });
+
+    addExam(data);
   }
 
   return (
