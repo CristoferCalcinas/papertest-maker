@@ -69,7 +69,7 @@ export function ExamCard({
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-2xl font-bold">{question}</CardTitle>
-        <Badge className={statusColors[status]}>{status}</Badge>
+        <Badge className={`${statusColors[status]} m-1`}>{status}</Badge>
       </CardHeader>
       <CardContent>
         <p className="text-lg mb-4 leading-relaxed" id={`question-${id}`}>
