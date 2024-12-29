@@ -31,7 +31,7 @@ export const ExamPreview = () => {
         <h2 className="text-3xl font-bold text-gray-900">
           Preguntas del Examen
         </h2>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-gray-500 text-center">
           {exams.length} {exams.length === 1 ? "pregunta" : "preguntas"}
         </span>
       </header>
