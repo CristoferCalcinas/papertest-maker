@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { format, isValid } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
 import {
   Card,
@@ -25,6 +25,7 @@ interface ExamCardProps {
   onDelete?: () => void;
   onStatusChange?: (status: string) => void;
 }
+
 export function ExamCard({
   id,
   question,
@@ -38,15 +39,22 @@ export function ExamCard({
 }: ExamCardProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-  const parseDate = (date: Date | string): Date => {
-    if (typeof date === "string") {
-      const parsedDate = new Date(date);
-      return isValid(parsedDate) ? parsedDate : new Date();
+  // Función mejorada para manejar fechas
+  const formatDate = (date: Date | string): string => {
+    try {
+      const dateObj = typeof date === "string" ? parseISO(date) : date;
+      if (!isValid(dateObj)) {
+        return "Fecha de creación no disponible";
+      }
+      // Usar una configuración fija para el formato de fecha
+      return format(dateObj, "dd/MM/yyyy HH:mm", {
+        useAdditionalWeekYearTokens: true,
+        useAdditionalDayOfYearTokens: true,
+      });
+    } catch (error) {
+      return "Fecha de creación no disponible";
     }
-    return isValid(date) ? date : new Date();
   };
-
-  const safeCreatedAt = parseDate(createdAt);
 
   const toggleAnswer = () => {
     setIsAnswerVisible(!isAnswerVisible);
@@ -86,9 +94,8 @@ export function ExamCard({
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <div className="text-sm text-muted-foreground">
-          {isValid(safeCreatedAt)
-            ? `Creado el ${format(safeCreatedAt, "dd/MM/yyyy HH:mm")}`
-            : "Fecha de creación no disponible"}
+          Creado el&nbsp;
+          {formatDate(createdAt)}
         </div>
         <div className="flex space-x-2">
           <Button
