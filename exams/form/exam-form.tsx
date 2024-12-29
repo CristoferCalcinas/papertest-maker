@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
+  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useExamStore } from "./store/create-exam-store";
+import { useExamStore } from "../store/exam-store";
 
 const FormSchema = z.object({
   question: z.string().min(5, {
@@ -27,7 +27,7 @@ const FormSchema = z.object({
   }),
 });
 
-export const InputExam = () => {
+export const ExamForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -39,8 +39,7 @@ export const InputExam = () => {
   const addExam = useExamStore((state) => state.addExam);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-
-    if(!form.formState.isValid) return;
+    if (!form.formState.isValid) return;
 
     toast({
       title: "You submitted the following values:",
@@ -56,7 +55,11 @@ export const InputExam = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full space-y-3"
+        aria-label="Formulario de creación de pregunta"
+      >
         <FormField
           control={form.control}
           name="question"
@@ -67,11 +70,16 @@ export const InputExam = () => {
                 <span className="text-red-500">&nbsp;*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Introduce la pregunta" {...field} />
+                <Input
+                  id="question"
+                  placeholder="Ej: ¿Cuál es la capital de Francia?"
+                  {...field}
+                  aria-required="true"
+                />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 Introduce la pregunta que deseas que aparezca en el examen.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -87,11 +95,16 @@ export const InputExam = () => {
                   <span className="text-red-500">&nbsp;*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Introduce la pregunta" {...field} />
+                  <Input
+                    id="correctAnswer"
+                    placeholder="Ej: París"
+                    {...field}
+                    aria-required="true"
+                  />
                 </FormControl>
-                <FormDescription>
+                {/* <FormDescription>
                   Introduce la respuesta correcta de la pregunta.
-                </FormDescription>
+                </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}

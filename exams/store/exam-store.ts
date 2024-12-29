@@ -1,13 +1,5 @@
 import { create } from "zustand";
 
-interface Exam {
-  id: string;
-  question: string;
-  correctAnswer: string;
-  createdAt: Date;
-  status: "pending" | "reviewed" | "archived";
-}
-
 interface ExamStore {
   exams: Exam[];
   addExam: (exam: Omit<Exam, "id" | "createdAt" | "status">) => void;
@@ -39,7 +31,7 @@ export const useExamStore = create<ExamStore>((set) => ({
       status: "pending",
     },
   ],
-  
+
   addExam: (exam) =>
     set((state) => ({
       exams: [
@@ -52,10 +44,12 @@ export const useExamStore = create<ExamStore>((set) => ({
         },
       ],
     })),
+
   updateExam: (id, exam) =>
     set((state) => ({
       exams: state.exams.map((e) => (e.id === id ? { ...e, ...exam } : e)),
     })),
+
   deleteExam: (id) =>
     set((state) => ({
       exams: state.exams.filter((e) => e.id !== id),

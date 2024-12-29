@@ -1,11 +1,11 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { InputExam } from "@/exams/input-exam";
-import { Divider } from "@/exams/divider";
-import { RenderExam } from "@/exams/render-exam";
-
 import { Metadata } from "next";
+
+import { ExamForm } from "@/exams/form/exam-form";
+import { ExamFormDivider } from "@/exams/form/exam-form-divider";
+import { ExamPreview } from "@/exams/preview/exam-preview";
 
 export const metadata: Metadata = {
   title: "Crear Nuevo Examen | PaperTest Maker",
@@ -25,7 +25,7 @@ export default function CreateExamPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 sm:gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <article className="lg:pr-4 w-full h-full">
-              <RenderExam />
+              <ExamPreview />
             </article>
 
             <article>
@@ -35,8 +35,8 @@ export default function CreateExamPage() {
                 </h1>
 
                 <div className="max-w-xl">
-                  <InputExam />
-                  <Divider />
+                  <ExamForm />
+                  <ExamFormDivider />
                 </div>
               </div>
             </article>
