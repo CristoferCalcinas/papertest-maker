@@ -26,6 +26,21 @@ interface ExamCardProps {
   onStatusChange?: (status: string) => void;
 }
 
+const formatDate = (date: Date | string): string => {
+  try {
+    const dateObj = typeof date === "string" ? parseISO(date) : date;
+    if (!isValid(dateObj)) {
+      return "Fecha de creación no disponible";
+    }
+    return format(dateObj, "dd/MM/yyyy HH:mm", {
+      useAdditionalWeekYearTokens: true,
+      useAdditionalDayOfYearTokens: true,
+    });
+  } catch (error) {
+    return "Fecha de creación no disponible";
+  }
+};
+
 export function ExamCard({
   id,
   question,
@@ -38,23 +53,6 @@ export function ExamCard({
   onStatusChange,
 }: ExamCardProps) {
   const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-
-  // Función mejorada para manejar fechas
-  const formatDate = (date: Date | string): string => {
-    try {
-      const dateObj = typeof date === "string" ? parseISO(date) : date;
-      if (!isValid(dateObj)) {
-        return "Fecha de creación no disponible";
-      }
-      // Usar una configuración fija para el formato de fecha
-      return format(dateObj, "dd/MM/yyyy HH:mm", {
-        useAdditionalWeekYearTokens: true,
-        useAdditionalDayOfYearTokens: true,
-      });
-    } catch (error) {
-      return "Fecha de creación no disponible";
-    }
-  };
 
   const toggleAnswer = () => {
     setIsAnswerVisible(!isAnswerVisible);
