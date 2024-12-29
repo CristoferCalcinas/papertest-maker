@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+
+import { createUserAction } from "../actions/auth-actions";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,13 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { registerSchema, RegisterSchema } from "../schemas/auth-schemas";
-
-import {
-  createUserAction,
-  loginWithCredentialsAction,
-} from "../actions/auth-actions";
 
 export const CreateUserForm = () => {
   const router = useRouter();
@@ -43,13 +41,11 @@ export const CreateUserForm = () => {
     try {
       const newUser = await createUserAction(formData);
       if (!newUser.data) return;
-      const isAutenticated = await loginWithCredentialsAction(
-        newUser.data.email,
-        values.password
-      );
-      if (!isAutenticated.ok) return;
-      router.push("/auth/select-role");
-      router.refresh();
+      await signIn("credentials", {
+        email: newUser.data.email,
+        password: values.password,
+        redirectTo: "/",
+      });
     } catch (error) {
       console.error("Login failed", error);
     }

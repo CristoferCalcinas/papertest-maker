@@ -32,7 +32,7 @@ export const loginWithCredentialsAction = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirectTo: "/",
     });
     return {
       ok: true,
