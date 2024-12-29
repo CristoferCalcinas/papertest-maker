@@ -46,7 +46,7 @@ export default function CreateExamPage() {
               {/* Formulario fijo */}
               <article className="lg:fixed lg:top-1/2 w-full lg:max-w-lg lg:-translate-y-1/2 p-2 border border-gray-200 rounded-lg bg-white shadow-sm">
                 <div className="text-base/7 text-gray-700">
-                  <h1 className="text-base/7 font-semibold text-indigo-600">
+                  <h1 className="text-base/7 font-semibold text-indigo-600 text-right pr-1 italic">
                     Nombre del Examen ?
                   </h1>
 
