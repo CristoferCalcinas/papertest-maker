@@ -68,12 +68,16 @@ export function ExamCard({
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-2xl font-bold">Pregunta</CardTitle>
+        <CardTitle className="text-2xl font-bold">{question}</CardTitle>
         <Badge className={statusColors[status]}>{status}</Badge>
       </CardHeader>
       <CardContent>
-        <p className="text-lg mb-4" id={`question-${id}`}>
-          {question}
+        <p className="text-lg mb-4 leading-relaxed" id={`question-${id}`}>
+          <span className="text-sm font-medium text-red-500">Resp.</span>
+          &nbsp;
+          <span className="text-gray-800 dark:text-gray-200">
+            {correctAnswer}
+          </span>
         </p>
         <AnimatePresence>
           {isAnswerVisible && (
@@ -83,7 +87,13 @@ export function ExamCard({
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <p className="text-md text-muted-foreground" id={`answer-${id}`}>
+              <p
+                className="text-md text-muted-foreground flex flex-col line-clamp-1"
+                id={`answer-${id}`}
+              >
+                <strong>Respuesta:</strong> {correctAnswer}
+                <strong>Respuesta:</strong> {correctAnswer}
+                <strong>Respuesta:</strong> {correctAnswer}
                 <strong>Respuesta:</strong> {correctAnswer}
               </p>
             </motion.div>
