@@ -8,6 +8,7 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./auth/**/*.{js,ts,jsx,tsx,mdx}",
     "./exams/**/*.{js,ts,jsx,tsx,mdx}",
+    "./dashboard/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
   	extend: {
