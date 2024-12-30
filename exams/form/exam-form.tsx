@@ -50,6 +50,11 @@ export const ExamForm = () => {
         question: selectedQuestion.question,
         correctAnswer: selectedQuestion.correctAnswer,
       });
+    } else {
+      form.reset({
+        question: "",
+        correctAnswer: "",
+      });
     }
   }, [selectedQuestion]);
 

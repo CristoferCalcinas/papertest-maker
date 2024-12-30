@@ -55,10 +55,15 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       exams: state.exams.map((e) => (e.id === id ? { ...e, ...exam } : e)),
     })),
 
-  deleteExam: (id) =>
+  deleteExam: (id) => {
+    if (get().selectedQuestion?.id === id) {
+      set({ selectedQuestion: null });
+    }
+
     set((state) => ({
       exams: state.exams.filter((e) => e.id !== id),
-    })),
+    }));
+  },
 
   clearEditing: () => set({ selectedQuestion: null }),
 
