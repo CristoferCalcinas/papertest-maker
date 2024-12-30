@@ -1,7 +1,9 @@
 "use client";
 
 import { ExamCard } from "./exam-card";
+
 import { useExamStore } from "../store/exam-store";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const ExamPreview = () => {
@@ -9,19 +11,19 @@ export const ExamPreview = () => {
   const editQuestion = useExamStore((state) => state.editQuestion);
   const deleteExam = useExamStore((state) => state.deleteExam);
 
-  const onToggleAnswer = () => {
+  const handleToggleAnswer = (): void => {
     console.log("Toggle Answer");
   };
 
-  const onEdit = (id: string) => {
+  const handleEditQuestion = (id: string): void => {
     editQuestion(id);
   };
 
-  const onDelete = (idQuestion: string) => {
+  const handleDeleteQuestion = (idQuestion: string): void => {
     deleteExam(idQuestion);
   };
 
-  const onStatusChange = () => {
+  const handleStatusChange = (): void => {
     console.log("Status Change");
   };
 
@@ -58,10 +60,10 @@ export const ExamPreview = () => {
                 <ExamCard
                   key={examCard.id}
                   {...examCard}
-                  onToggleAnswer={() => onToggleAnswer()}
-                  onEdit={() => onEdit(examCard.id)}
-                  onDelete={() => onDelete(examCard.id)}
-                  onStatusChange={() => onStatusChange()}
+                  onToggleAnswer={handleToggleAnswer}
+                  onEdit={() => handleEditQuestion(examCard.id)}
+                  onDelete={() => handleDeleteQuestion(examCard.id)}
+                  onStatusChange={handleStatusChange}
                 />
               ))}
             </div>

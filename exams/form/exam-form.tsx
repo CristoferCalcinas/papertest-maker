@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
@@ -28,6 +28,8 @@ const FormSchema = z.object({
     message: "La respuesta correcta debe tener al menos 5 caracteres.",
   }),
 });
+
+type FormSchemaType = z.infer<typeof FormSchema>;
 
 export const ExamForm = () => {
   const selectedQuestion = useExamStore((state) => state.selectedQuestion);
@@ -58,7 +60,7 @@ export const ExamForm = () => {
     }
   }, [selectedQuestion]);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  const handleFormSubmit: SubmitHandler<FormSchemaType> = (data) => {
     if (!form.formState.isValid) return;
 
     if (selectedQuestion) {
@@ -83,9 +85,9 @@ export const ExamForm = () => {
     });
 
     clearEditing();
-  }
+  };
 
-  const onCancel = () => {
+  const handleCancel = (): void => {
     form.reset({
       question: "",
       correctAnswer: "",
@@ -96,7 +98,7 @@ export const ExamForm = () => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleFormSubmit)}
         className="w-full space-y-3"
         aria-label="Formulario de creación de pregunta"
       >
@@ -160,7 +162,7 @@ export const ExamForm = () => {
             </Button>
 
             {selectedQuestion && (
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancelar
               </Button>
             )}
