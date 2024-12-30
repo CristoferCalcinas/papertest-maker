@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -41,6 +43,15 @@ export const ExamForm = () => {
     },
     values: selectedQuestion || undefined,
   });
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      form.reset({
+        question: selectedQuestion.question,
+        correctAnswer: selectedQuestion.correctAnswer,
+      });
+    }
+  }, [selectedQuestion]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!form.formState.isValid) return;
