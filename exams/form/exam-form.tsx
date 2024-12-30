@@ -28,21 +28,31 @@ const FormSchema = z.object({
 });
 
 export const ExamForm = () => {
+  const selectedQuestion = useExamStore((state) => state.selectedQuestion);
+  const addExam = useExamStore((state) => state.addExam);
+  const updateExam = useExamStore((state) => state.updateExam);
+  const clearEditing = useExamStore((state) => state.clearEditing);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       question: "",
       correctAnswer: "",
     },
+    values: selectedQuestion || undefined,
   });
-
-  const addExam = useExamStore((state) => state.addExam);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!form.formState.isValid) return;
 
+    if (selectedQuestion) {
+      updateExam(selectedQuestion.id, data);
+    } else {
+      addExam(data);
+    }
+
     toast({
-      title: "Pregunta añadida",
+      title: selectedQuestion ? "Pregunta actualizada" : "Pregunta añadida",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -51,10 +61,21 @@ export const ExamForm = () => {
       duration: 1500,
     });
 
-    addExam(data);
+    form.reset({
+      question: "",
+      correctAnswer: "",
+    });
 
-    form.reset();
+    clearEditing();
   }
+
+  const onCancel = () => {
+    form.reset({
+      question: "",
+      correctAnswer: "",
+    });
+    clearEditing();
+  };
 
   return (
     <Form {...form}>
@@ -113,9 +134,20 @@ export const ExamForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={!form.formState.isValid}>
-            <span>Guardar</span>
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              type="submit"
+              disabled={!form.formState.isDirty || !form.formState.isValid}
+            >
+              {selectedQuestion ? "Actualizar" : "Guardar"}
+            </Button>
+
+            {selectedQuestion && (
+              <Button type="button" variant="outline" onClick={onCancel}>
+                Cancelar
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </Form>

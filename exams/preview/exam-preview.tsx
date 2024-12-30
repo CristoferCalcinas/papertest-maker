@@ -6,13 +6,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export const ExamPreview = () => {
   const exams = useExamStore((state) => state.exams);
+  const editQuestion = useExamStore((state) => state.editQuestion);
 
   const onToggleAnswer = () => {
     console.log("Toggle Answer");
   };
 
-  const onEdit = () => {
-    console.log("Edit");
+  const onEdit = (id: string) => {
+    editQuestion(id);
   };
 
   const onDelete = () => {
@@ -57,7 +58,7 @@ export const ExamPreview = () => {
                   key={examCard.id}
                   {...examCard}
                   onToggleAnswer={() => onToggleAnswer()}
-                  onEdit={() => onEdit()}
+                  onEdit={() => onEdit(examCard.id)}
                   onDelete={() => onDelete()}
                   onStatusChange={() => onStatusChange()}
                 />
