@@ -115,6 +115,7 @@ export const ExamForm = () => {
                   placeholder="Ej: ¿Cuál es la capital de Francia?"
                   {...field}
                   aria-required="true"
+                  autoFocus
                 />
               </FormControl>
               {/* <FormDescription>
