@@ -90,7 +90,7 @@ export const ExamList = ({ exams }: Props) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleShowLess}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black disabled:opacity-50"
+          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Mostrar más exámenes"
           disabled={visibleCards <= 1}
         >
