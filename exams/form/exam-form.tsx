@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useExamStore } from "../store/exam-store";
+import { generateAnswers } from "../actions/generate-answers";
 
 const FormSchema = z.object({
   question: z.string().min(5, {
@@ -60,7 +61,7 @@ export const ExamForm = () => {
     }
   }, [selectedQuestion]);
 
-  const handleFormSubmit: SubmitHandler<FormSchemaType> = (data) => {
+  const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     if (!form.formState.isValid) return;
 
     if (selectedQuestion) {
@@ -78,6 +79,9 @@ export const ExamForm = () => {
       ),
       duration: 1500,
     });
+
+    const resp = await generateAnswers(data.question, data.correctAnswer, 2);
+    console.log({ resp });
 
     form.reset({
       question: "",
