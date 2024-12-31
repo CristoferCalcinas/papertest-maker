@@ -129,7 +129,7 @@ export const ExamForm = () => {
                   aria-required="true"
                   autoFocus
                   rows={3}
-                  className="resize-none min-w-fit"
+                  className="resize-none sm:min-w-[430px]"
                 />
               </FormControl>
               {/* <FormDescription>
@@ -139,33 +139,34 @@ export const ExamForm = () => {
             </FormItem>
           )}
         />
-        <div className="flex flex-row-reverse gap-4 items-end justify-evenly">
-          <FormField
-            control={form.control}
-            name="correctAnswer"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="pl-3">
-                  Respuesta correcta
-                  <span className="text-red-500">&nbsp;*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="correctAnswer"
-                    placeholder="Ej: París"
-                    {...field}
-                    aria-required="true"
-                    className="lg:min-w-[300px]"
-                  />
-                </FormControl>
-                {/* <FormDescription>
-                  Introduce la respuesta correcta de la pregunta.
-                </FormDescription> */}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-col gap-2">
+
+        <div className="flex flex-row-reverse gap-5 items-end">
+          <div className="flex-grow basis-2/3">
+            <FormField
+              control={form.control}
+              name="correctAnswer"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="pl-3">
+                    Respuesta correcta
+                    <span className="text-red-500">&nbsp;*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      id="correctAnswer"
+                      placeholder="Ej: París"
+                      {...field}
+                      aria-required="true"
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 basis-1/3">
             <Button
               type="submit"
               disabled={!form.formState.isDirty || !form.formState.isValid}
