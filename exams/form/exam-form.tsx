@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 import { useExamStore } from "../store/exam-store";
 import { resetFormState } from "../helpers/resetFormState";
@@ -121,12 +122,14 @@ export const ExamForm = () => {
                 <span className="text-red-500">&nbsp;*</span>
               </FormLabel>
               <FormControl>
-                <Input
+                <Textarea
                   id="question"
                   placeholder="Ej: ¿Cuál es la capital de Francia?"
                   {...field}
                   aria-required="true"
                   autoFocus
+                  rows={3}
+                  className="resize-none min-w-fit"
                 />
               </FormControl>
               {/* <FormDescription>
