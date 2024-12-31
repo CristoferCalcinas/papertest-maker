@@ -12,7 +12,8 @@ export const processAnswers = async (
     correctAnswer,
     DEFAULT_ANSWERS_COUNT
   );
-  if (!resp) return;
+  
+  if (!resp) throw new Error("No se pudo generar respuestas");
 
   const answers = resp.map((r) => r.answer);
   changeCorrectAnswers(questionId, answers);
