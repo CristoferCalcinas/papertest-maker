@@ -4,4 +4,5 @@ interface Exam {
   correctAnswer: string;
   createdAt: Date | string;
   status: "pending" | "reviewed" | "archived";
+  completionAnswers: string[] | null;
 }

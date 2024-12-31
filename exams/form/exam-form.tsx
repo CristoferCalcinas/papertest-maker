@@ -18,25 +18,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
 import { useExamStore } from "../store/exam-store";
-import { generateAnswers } from "../actions/generate-answers";
+import { resetFormState } from "../helpers/resetFormState";
+import { FormSchema, FormSchemaType } from "../schemas/exam-schemas";
 
-const FormSchema = z.object({
-  question: z.string().min(5, {
-    message: "La pregunta debe tener al menos 5 caracteres.",
-  }),
-  correctAnswer: z.string().min(5, {
-    message: "La respuesta correcta debe tener al menos 5 caracteres.",
-  }),
-});
-
-type FormSchemaType = z.infer<typeof FormSchema>;
+import { generateToastMessage } from "../helpers/generateToastMessage";
+import { processAnswers } from "../helpers/processAnswers";
 
 export const ExamForm = () => {
   const selectedQuestion = useExamStore((state) => state.selectedQuestion);
   const addExam = useExamStore((state) => state.addExam);
   const updateExam = useExamStore((state) => state.updateExam);
   const clearEditing = useExamStore((state) => state.clearEditing);
+  const changeCorrectAnswers = useExamStore(
+    (state) => state.changeCorrectAnswers
+  );
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -64,31 +61,39 @@ export const ExamForm = () => {
   const handleFormSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     if (!form.formState.isValid) return;
 
-    if (selectedQuestion) {
-      updateExam(selectedQuestion.id, data);
-    } else {
-      addExam(data);
-    }
+    toast(generateToastMessage(data, Boolean(selectedQuestion)));
 
-    toast({
-      title: selectedQuestion ? "Pregunta actualizada" : "Pregunta añadida",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      duration: 1500,
-    });
-
-    const resp = await generateAnswers(data.question, data.correctAnswer, 2);
-    console.log({ resp });
-
-    form.reset({
-      question: "",
-      correctAnswer: "",
-    });
-
+    resetFormState(form);
     clearEditing();
+
+    try {
+      if (selectedQuestion) {
+        // Modo edición
+        updateExam(selectedQuestion.id, data);
+        await processAnswers(
+          selectedQuestion.id,
+          data.question,
+          data.correctAnswer,
+          changeCorrectAnswers
+        );
+      } else {
+        // Modo creación
+        const examAdded = addExam(data);
+        await processAnswers(
+          examAdded.id,
+          data.question,
+          data.correctAnswer,
+          changeCorrectAnswers
+        );
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Hubo un error al procesar la pregunta",
+        variant: "destructive",
+      });
+      console.error(error);
+    }
   };
 
   const handleCancel = (): void => {

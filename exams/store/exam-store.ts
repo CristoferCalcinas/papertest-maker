@@ -4,11 +4,14 @@ interface ExamStore {
   exams: Exam[];
   selectedQuestion: Exam | null;
 
-  addExam: (exam: Omit<Exam, "id" | "createdAt" | "status">) => void;
+  addExam: (
+    exam: Omit<Exam, "id" | "createdAt" | "status" | "completionAnswers">
+  ) => Exam;
   updateExam: (id: string, exam: Partial<Exam>) => void;
   deleteExam: (id: string) => void;
   clearEditing: () => void;
   editQuestion: (id: string) => void;
+  changeCorrectAnswers: (idQuestion: string, correctAnswers: string[]) => void;
 }
 
 export const useExamStore = create<ExamStore>((set, get) => ({
@@ -19,6 +22,7 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       correctAnswer: "Júpiter",
       createdAt: "2021-09-01T00:00:00.000Z",
       status: "pending",
+      completionAnswers: null,
     },
     {
       id: "2",
@@ -26,6 +30,7 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       correctAnswer: "1914",
       createdAt: "2021-09-02T00:00:00.000Z",
       status: "reviewed",
+      completionAnswers: null,
     },
     {
       id: "3",
@@ -33,22 +38,24 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       correctAnswer: "Vincent van Gogh",
       createdAt: "2021-09-03T00:00:00.000Z",
       status: "pending",
+      completionAnswers: null,
     },
   ],
   selectedQuestion: null,
 
-  addExam: (exam) =>
+  addExam: (exam) => {
+    const newExam = {
+      ...exam,
+      id: crypto.randomUUID(),
+      createdAt: new Date(),
+      status: "pending" as const,
+      completionAnswers: null,
+    };
     set((state) => ({
-      exams: [
-        ...state.exams,
-        {
-          ...exam,
-          id: crypto.randomUUID(),
-          createdAt: new Date(),
-          status: "pending",
-        },
-      ],
-    })),
+      exams: [...state.exams, { ...newExam }],
+    }));
+    return newExam;
+  },
 
   updateExam: (id, exam) =>
     set((state) => ({
@@ -70,5 +77,15 @@ export const useExamStore = create<ExamStore>((set, get) => ({
   editQuestion: (id) => {
     const exam = get().exams.find((e) => e.id === id);
     set({ selectedQuestion: exam || null });
+  },
+
+  changeCorrectAnswers: (idQuestion, correctAnswers) => {
+    set((state) => ({
+      exams: state.exams.map((exam) =>
+        exam.id === idQuestion
+          ? { ...exam, completionAnswers: correctAnswers, status: "reviewed" }
+          : exam
+      ),
+    }));
   },
 }));
