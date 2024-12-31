@@ -7,10 +7,13 @@ export default function ExamsLayout({
 }) {
   return (
     <section
-      className="mx-auto max-w-7xl pt-10 pl-5"
+      className="mx-auto max-w-7xl"
       aria-label="Breadcrumb de navegación"
     >
-      <BreadcrumbTitle />
+      <div className="mt-10 pl-5">
+        <BreadcrumbTitle />
+      </div>
+
       {children}
     </section>
   );
