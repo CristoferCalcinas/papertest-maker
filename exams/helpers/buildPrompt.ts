@@ -1,66 +1,100 @@
 //! TODO: check the paper https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags
 
-const prompt = `# Smart Distractor Generator
+const prompt = `<prompt>
+  <task>Smart Distractor Generator</task>
+  
+  <input>
+    <parameters>
+      <question>${"$[1]"}</question>
+      <correctAnswer>${"$[2]"}</correctAnswer>
+      <numberOfDistractors>${"$[3]"}</numberOfDistractors>
+      <outputLanguage>${"$[4]"}</outputLanguage>
+    </parameters>
+  </input>
 
-  INPUT:
-  {
-    "question": "¿$[1]?",
-    "correct_answer": "$[2]",
-    "number_of_distractors": $[3],
-    "output_language": "es"
-  }
+  <rules>
+    <critical>Generate ONLY incorrect but highly plausible answers</critical>
+    <requirements>
+      <must>
+        <rule>Match the format/style of the correct answer</rule>
+        <rule>Be grammatically correct</rule>
+        <rule>Be logically possible within the context</rule>
+        <rule>Have similar length and complexity</rule>
+        <rule>Be distinct from each other</rule>
+        <rule>Represent common misconceptions or related concepts</rule>
+      </must>
+      <mustNot>
+        <rule>Be partially correct</rule>
+        <rule>Be obviously wrong</rule>
+        <rule>Contain grammatical hints</rule>
+        <rule>Be humorous or nonsensical</rule>
+        <rule>Repeat information</rule>
+      </mustNot>
+    </requirements>
+  </rules>
 
-  INSTRUCTIONS:
-  1. CRITICAL: Generate ONLY incorrect but highly plausible answers
-  2. MUST:
-     - Match the format/style of the correct answer
-     - Be grammatically correct
-     - Be logically possible within the context
-     - Have similar length and complexity
-     - Be distinct from each other
-     - Represent common misconceptions or related concepts
-  3. MUST NOT:
-     - Be partially correct
-     - Be obviously wrong
-     - Contain grammatical hints
-     - Be humorous or nonsensical
-     - Repeat information
-  4. ANALYZE:
-     - Answer type (definition, number, date, name, etc.)
-     - Subject/field
-     - Common error patterns
-  5. OUTPUT:
-     - ONLY return the JSON structure
-     - NO explanations outside the JSON
-     - NO additional text or markdown
-     - ALL fields must be in the specified output_language
+  <analysis>
+    <criteria>
+      <item>Answer type (definition, number, date, name, etc.)</item>
+      <item>Subject/field</item>
+      <item>Common error patterns</item>
+    </criteria>
+  </analysis>
 
-  OUTPUT FORMAT:
-  {
-    "analysis": {
-      "answer_type": "...",
-      "subject": "...",
-      "error_pattern": "..."
-    },
-    "correct_answer": "...",
-    "distractors": [
-      {
-        "answer": "...",
-        "reasoning": "...",
-        "error_type": "..."
-      }
-    ]
-  }`;
+  <outputRequirements>
+    <format>JSON</format>
+    <constraints>
+      <constraint>ONLY return the JSON structure</constraint>
+      <constraint>NO explanations outside the JSON</constraint>
+      <constraint>NO additional text or markdown</constraint>
+      <constraint>ALL fields must be in the specified output_language</constraint>
+    </constraints>
+  </outputRequirements>
+
+  <outputFormat>
+    {
+      "analysis": {
+        "answer_type": "...",
+        "subject": "...",
+        "error_pattern": "..."
+      },
+      "correct_answer": "...",
+      "distractors": [
+        {
+          "answer": "...",
+          "reasoning": "...",
+          "error_type": "..."
+        }
+      ]
+    }
+  </outputFormat>
+</prompt>`;
 
 export function buildPrompt(
   question: string,
   correctAnswer: string,
   numberOfDistractors: number,
-  outputLanguage?: string
+  outputLanguage: string = "es"
 ): string {
-  return prompt
-    .replace("$[1]", question)
-    .replace("$[2]", correctAnswer)
-    .replace("$[3]", numberOfDistractors.toString())
-    .replace("$[4]", outputLanguage || "es");
+  // Sanitizar inputs para evitar inyección XML
+  const sanitizeInput = (input: string): string => {
+    return input
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&apos;");
+  };
+
+  const replacements = {
+    "$[1]": sanitizeInput(question),
+    "$[2]": sanitizeInput(correctAnswer),
+    "$[3]": numberOfDistractors.toString(),
+    "$[4]": sanitizeInput(outputLanguage),
+  };
+
+  return Object.entries(replacements).reduce(
+    (acc, [key, value]) => acc.replace(key, value),
+    prompt
+  );
 }
