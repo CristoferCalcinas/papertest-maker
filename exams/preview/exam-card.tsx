@@ -19,6 +19,7 @@ interface ExamCardProps {
   question: string;
   correctAnswer: string;
   createdAt: Date | string;
+  completionAnswers: string[] | null;
   status?: "pending" | "reviewed" | "archived";
   onToggleAnswer?: () => void;
   onEdit?: () => void;
@@ -46,6 +47,7 @@ export function ExamCard({
   question,
   correctAnswer,
   createdAt,
+  completionAnswers,
   status = "pending",
   onToggleAnswer,
   onEdit,
@@ -87,15 +89,15 @@ export function ExamCard({
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <p
-                className="text-md text-muted-foreground flex flex-col line-clamp-1"
-                id={`answer-${id}`}
-              >
-                <strong>Respuesta:</strong> {correctAnswer}
-                <strong>Respuesta:</strong> {correctAnswer}
-                <strong>Respuesta:</strong> {correctAnswer}
-                <strong>Respuesta:</strong> {correctAnswer}
-              </p>
+              {!completionAnswers ? (
+                <LoadingSpinner />
+              ) : (
+                <ul className="answer-list">
+                  {completionAnswers.map((answer, index) => (
+                    <Answer key={index} answer={answer} id={id} />
+                  ))}
+                </ul>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -150,3 +152,19 @@ export function ExamCard({
     </Card>
   );
 }
+
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100" />
+    <span className="ml-3">Cargando respuestas...</span>
+  </div>
+);
+
+const Answer = ({ answer, id }: { answer: string; id: string }) => (
+  <li
+    className="text-md text-muted-foreground flex flex-col line-clamp-1"
+    id={`answer-${id}`}
+  >
+    <strong>Respuesta: {answer}</strong>
+  </li>
+);
