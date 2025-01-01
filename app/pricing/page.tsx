@@ -7,8 +7,9 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title:
     "Planes y Precios | PaperTest Maker - Software de Evaluación Educativa",
-  description:
-    "Encuentra el plan perfecto para tu institución educativa. Desde $29/mes con PaperTest Maker. Gestión de exámenes, análisis en tiempo real y soporte personalizado.",
+  description: `Planes flexibles desde $29/mes. Plan Básico para 100 estudiantes, 
+    Plan Profesional con funciones avanzadas a $79/mes y Plan Institución 
+    con capacidades ilimitadas. Incluye soporte personalizado y análisis en tiempo real.`,
   keywords: [
     "precios exámenes online",
     "software evaluación educativa",
@@ -177,6 +178,27 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
+      </div>
+      <div className="mx-auto mt-10 max-w-4xl flex items-center justify-evenly gap-4 px-6">
+        <Link
+          className="group relative inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#1E3A8A] transition-all duration-200 ease-in-out hover:bg-opacity-90 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          href="/contact"
+          aria-label="Contactar para plan personalizado"
+        >
+          <span className="absolute inset-0 transform rounded-xl bg-gradient-to-r from-[#1E3A8A]/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <span className="relative">
+            ¿Necesitas un plan personalizado? Contáctanos
+          </span>
+        </Link>
+
+        <Link
+          className="group relative inline-flex items-center justify-center rounded-xl border border-white bg-[#1E3A8A] px-6 py-3 text-sm font-semibold text-white transition-all duration-200 ease-in-out hover:bg-[#1e40af] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          href="/"
+          aria-label="Volver a la página principal"
+        >
+          <span className="absolute inset-0 transform rounded-xl bg-gradient-to-r from-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <span className="relative">Volver al inicio</span>
+        </Link>
       </div>
     </main>
   );
