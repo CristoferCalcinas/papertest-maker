@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 interface Props {
   imageUrl: string;
   createdAt: string;
@@ -12,7 +16,11 @@ interface Props {
 
 export const RecentExamItem = ({ title, questions, lastModifiedAt }: Props) => {
   return (
-    <li className="flex items-center justify-evenly space-x-6 py-6">
+    <motion.li
+      className="flex items-center justify-evenly space-x-6 py-6"
+      whileHover={{ scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
       <div className="flex items-center justify-between space-x-6">
         <img
           alt={""}
@@ -43,10 +51,9 @@ export const RecentExamItem = ({ title, questions, lastModifiedAt }: Props) => {
           </div>
         </div>
       </div>
-
       <div>
         <span>{lastModifiedAt}</span>
       </div>
-    </li>
+    </motion.li>
   );
 };
