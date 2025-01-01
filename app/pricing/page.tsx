@@ -96,14 +96,14 @@ export default function PricingPage() {
     <main className="bg-[#1E3A8A] py-8 sm:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-base/7 font-semibold text-indigo-600">
+          <h1 className="text-base/7 font-semibold text-white">
             Planes y precios
           </h1>
-          <p className="mt-2 text-balance text-5xl font-semibold tracking-tighter text-gray-900 sm:text-6xl">
+          <p className="mt-2 text-balance text-5xl font-semibold tracking-tighter text-white sm:text-6xl">
             Precios que crecen contigo
           </p>
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-pretty text-center text-lg font-medium text-gray-600 sm:text-xl/8">
+        <p className="mx-auto mt-6 max-w-2xl text-pretty text-center text-lg font-medium text-gray-200 sm:text-xl/8">
           Elige el plan perfecto para crear y administrar tus exámenes, dar
           seguimiento al progreso de tus estudiantes y optimizar tu proceso de
           evaluación.
@@ -116,7 +116,7 @@ export default function PricingPage() {
                 tier.mostPopular ? "lg:z-10 lg:rounded-b-none" : "lg:mt-8",
                 tierIdx === 0 ? "lg:rounded-r-none" : "",
                 tierIdx === tiers.length - 1 ? "lg:rounded-l-none" : "",
-                "flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10"
+                "flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-[#CBD5E1] xl:p-10"
               )}
             >
               <div>
@@ -124,15 +124,15 @@ export default function PricingPage() {
                   <h3
                     id={tier.id}
                     className={clsx(
-                      tier.mostPopular ? "text-indigo-600" : "text-gray-900",
+                      tier.mostPopular ? "text-[#1E3A8A]" : "text-gray-900",
                       "text-lg/8 font-semibold"
                     )}
                   >
                     {tier.name}
                   </h3>
                   {tier.mostPopular ? (
-                    <p className="rounded-full bg-indigo-600/10 px-2.5 py-1 text-xs/5 font-semibold text-indigo-600">
-                      Most popular
+                    <p className="rounded-full bg-[#1E3A8A]/10 px-2.5 py-1 text-xs/5 font-semibold text-[#1E3A8A]">
+                      Más popular
                     </p>
                   ) : null}
                 </div>
@@ -144,7 +144,7 @@ export default function PricingPage() {
                     {tier.priceMonthly}
                   </span>
                   <span className="text-sm/6 font-semibold text-gray-600">
-                    /month
+                    /mes
                   </span>
                 </p>
                 <ul
@@ -155,9 +155,8 @@ export default function PricingPage() {
                     <li key={feature} className="flex gap-x-3">
                       <FaCalendarCheck
                         aria-hidden="true"
-                        className="h-6 w-5 flex-none text-indigo-600"
+                        className="h-6 w-5 flex-none text-[#1E3A8A]"
                       />
-
                       {feature}
                     </li>
                   ))}
@@ -168,9 +167,9 @@ export default function PricingPage() {
                 aria-describedby={tier.id}
                 className={clsx(
                   tier.mostPopular
-                    ? "bg-indigo-600 text-white shadow-sm hover:bg-indigo-500"
-                    : "text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300",
-                  "mt-8 block rounded-md px-3 py-2 text-center text-sm/6 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    ? "bg-[#1E3A8A] text-white shadow-sm hover:bg-[#1e40af]"
+                    : "text-[#1E3A8A] ring-1 ring-inset ring-[#1E3A8A] hover:bg-[#1E3A8A]/5",
+                  "mt-8 block rounded-md px-3 py-2 text-center text-sm/6 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E3A8A]"
                 )}
               >
                 Comenzar
