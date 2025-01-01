@@ -25,7 +25,7 @@ import { resetFormState } from "../helpers/resetFormState";
 import { FormSchema, FormSchemaType } from "../schemas/exam-schemas";
 
 import { generateToastMessage } from "../helpers/generateToastMessage";
-import { processAnswers } from "../helpers/processAnswers";
+import { processAnswers } from "../actions/generate-answers";
 
 export const ExamForm = () => {
   const selectedQuestion = useExamStore((state) => state.selectedQuestion);
@@ -71,21 +71,17 @@ export const ExamForm = () => {
       if (selectedQuestion) {
         // Modo edición
         updateExam(selectedQuestion.id, data);
-        await processAnswers(
-          selectedQuestion.id,
-          data.question,
-          data.correctAnswer,
-          changeCorrectAnswers
-        );
+
+        const answers = await processAnswers(data.question, data.correctAnswer);
+
+        changeCorrectAnswers(selectedQuestion.id, answers);
       } else {
         // Modo creación
         const examAdded = addExam(data);
-        await processAnswers(
-          examAdded.id,
-          data.question,
-          data.correctAnswer,
-          changeCorrectAnswers
-        );
+
+        const answers = await processAnswers(data.question, data.correctAnswer);
+
+        changeCorrectAnswers(examAdded.id, answers);
       }
     } catch (error) {
       toast({

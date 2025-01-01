@@ -1,7 +1,12 @@
 import { createElement } from "react";
-import { FormSchemaType, TOAST_DURATION } from "../schemas/exam-schemas";
+import { FormSchemaType } from "../schemas/exam-schemas";
 
-export const generateToastMessage = (data: FormSchemaType, isEditing: boolean) => ({
+export const TOAST_DURATION = 1500;
+
+export const generateToastMessage = (
+  data: FormSchemaType,
+  isEditing: boolean
+) => ({
   title: isEditing ? "Pregunta actualizada" : "Pregunta añadida",
   description: createElement(
     "pre",

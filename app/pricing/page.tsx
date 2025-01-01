@@ -93,7 +93,7 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <main className="bg-white py-8 sm:py-16">
+    <main className="bg-[#1E3A8A] py-8 sm:py-16">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="text-base/7 font-semibold text-indigo-600">
