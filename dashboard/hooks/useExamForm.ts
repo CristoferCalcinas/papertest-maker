@@ -8,7 +8,7 @@ export const examFormSchema = z.object({
   examName: z
     .string()
     .min(3, "El nombre del examen debe tener al menos 3 caracteres"),
-    answersCount: z.string().min(1, "Debe seleccionar un número de preguntas"),
+  answersCount: z.string().min(1, "Debe seleccionar un número de preguntas"),
 });
 
 export type ExamFormValues = z.infer<typeof examFormSchema>;
@@ -24,10 +24,14 @@ export const useExamForm = () => {
   });
 
   const onSubmit = async (data: ExamFormValues) => {
-    console.log({ ...data, answersCount: parseInt(data.answersCount) });
+    const newExam = await createExam(data.examName, data.answersCount);
 
-    await createExam(data.examName, data.answersCount);
-    // router.push("/exams");
+    if (!newExam.success && !newExam.data.id) {
+      alert(newExam.error);
+      return;
+    }
+
+    router.push(`/exams/create?examId=${newExam.data.id}`);
   };
 
   return { form, onSubmit };
