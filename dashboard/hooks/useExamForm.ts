@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { createExam } from "../actions/dashboard-actions";
 
 export const examFormSchema = z.object({
   examName: z
@@ -25,6 +26,9 @@ export const useExamForm = () => {
   const onSubmit = async (data: ExamFormValues) => {
     console.log({ ...data, questionsCount: parseInt(data.questionsCount) });
 
+    //! TODO cambiar el questionsCount por answersCount, ya que se tiene que almacenar los valores de la respuesta
+
+    await createExam(data.examName, data.questionsCount);
     // router.push("/exams");
   };
 

@@ -143,15 +143,16 @@ model Project {
 }
 
 model Exam {
-  id        String     @id @default(uuid())
-  title     String
-  projectId String?
-  project   Project?   @relation(fields: [projectId], references: [id])
-  userId    String
-  user      User       @relation(fields: [userId], references: [id])
-  questions Question[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id           String     @id @default(uuid())
+  title        String
+  projectId    String?
+  project      Project?   @relation(fields: [projectId], references: [id])
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  questions    Question[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  answersCount Int        @default(0)
 
   @@index([userId])
 }
