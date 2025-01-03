@@ -39,7 +39,7 @@ export const QuestionSelect = ({ form, session }: QuestionSelectProps) => {
           return (
             <SelectItem key={value} value={value} disabled={isDisabled}>
               <div className="flex items-center justify-between gap-2">
-                <span>{value} preguntas</span>
+                <span>{value} Respuestas por Pregunta</span>
                 {isDisabled && (
                   <div className="flex items-center gap-1">
                     <FaLock className="h-3 w-3 text-muted-foreground" />

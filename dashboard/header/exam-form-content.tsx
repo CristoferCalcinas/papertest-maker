@@ -47,7 +47,7 @@ export const ExamFormContent = ({ form, session }: ExamFormContentProps) => (
       </div>
       <div className="grid grid-cols-4 items-center gap-4">
         <Label htmlFor="answersCount" className="text-right">
-          Número de Preguntas
+          Respuestas por Pregunta
         </Label>
         <QuestionSelect form={form} session={session} />
         {form.formState.errors.answersCount && (
