@@ -66,9 +66,14 @@ async function generateAnswers(
 
 export const processAnswers = async (
   question: string,
-  correctAnswer: string
+  correctAnswer: string,
+  numberOfDistractors: number
 ) => {
-  const generatedDistractors = await generateAnswers(question, correctAnswer);
+  const generatedDistractors = await generateAnswers(
+    question,
+    correctAnswer,
+    numberOfDistractors
+  );
 
   if (!generatedDistractors) throw new Error("No se pudo generar respuestas");
 

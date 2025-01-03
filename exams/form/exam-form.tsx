@@ -27,7 +27,12 @@ import { FormSchema, FormSchemaType } from "../schemas/exam-schemas";
 import { generateToastMessage } from "../helpers/generateToastMessage";
 import { processAnswers } from "../actions/generate-answers";
 
-export const ExamForm = () => {
+interface Props {
+  id: string;
+  answersCount: number;
+}
+
+export const ExamForm = ({ id: idExam, answersCount }: Props) => {
   const selectedQuestion = useExamStore((state) => state.selectedQuestion);
   const addExam = useExamStore((state) => state.addExam);
   const updateExam = useExamStore((state) => state.updateExam);
@@ -72,14 +77,22 @@ export const ExamForm = () => {
         // Modo edición
         updateExam(selectedQuestion.id, data);
 
-        const answers = await processAnswers(data.question, data.correctAnswer);
+        const answers = await processAnswers(
+          data.question,
+          data.correctAnswer,
+          answersCount
+        );
 
         changeCorrectAnswers(selectedQuestion.id, answers);
       } else {
         // Modo creación
         const examAdded = addExam(data);
 
-        const answers = await processAnswers(data.question, data.correctAnswer);
+        const answers = await processAnswers(
+          data.question,
+          data.correctAnswer,
+          answersCount
+        );
 
         changeCorrectAnswers(examAdded.id, answers);
       }
