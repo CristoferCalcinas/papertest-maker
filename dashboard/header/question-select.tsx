@@ -24,7 +24,7 @@ export const QuestionSelect = ({ form, session }: QuestionSelectProps) => {
     <Select
       onValueChange={(value) => {
         if (isSubscribed || ["2", "3"].includes(value)) {
-          form.setValue("questionsCount", value);
+          form.setValue("answersCount", value);
         }
       }}
     >

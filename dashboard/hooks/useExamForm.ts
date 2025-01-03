@@ -8,7 +8,7 @@ export const examFormSchema = z.object({
   examName: z
     .string()
     .min(3, "El nombre del examen debe tener al menos 3 caracteres"),
-  questionsCount: z.string().min(1, "Debe seleccionar un número de preguntas"),
+    answersCount: z.string().min(1, "Debe seleccionar un número de preguntas"),
 });
 
 export type ExamFormValues = z.infer<typeof examFormSchema>;
@@ -19,16 +19,14 @@ export const useExamForm = () => {
     resolver: zodResolver(examFormSchema),
     defaultValues: {
       examName: "",
-      questionsCount: "2",
+      answersCount: "2",
     },
   });
 
   const onSubmit = async (data: ExamFormValues) => {
-    console.log({ ...data, questionsCount: parseInt(data.questionsCount) });
+    console.log({ ...data, answersCount: parseInt(data.answersCount) });
 
-    //! TODO cambiar el questionsCount por answersCount, ya que se tiene que almacenar los valores de la respuesta
-
-    await createExam(data.examName, data.questionsCount);
+    await createExam(data.examName, data.answersCount);
     // router.push("/exams");
   };
 

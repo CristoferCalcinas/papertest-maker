@@ -46,16 +46,16 @@ export const ExamFormContent = ({ form, session }: ExamFormContentProps) => (
         )}
       </div>
       <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="questionsCount" className="text-right">
+        <Label htmlFor="answersCount" className="text-right">
           Número de Preguntas
         </Label>
         <QuestionSelect form={form} session={session} />
-        {form.formState.errors.questionsCount && (
+        {form.formState.errors.answersCount && (
           <p
-            id="questionsCount-error"
+            id="answersCount-error"
             className="col-start-2 col-span-3 text-sm text-red-500"
           >
-            {form.formState.errors.questionsCount.message}
+            {form.formState.errors.answersCount.message}
           </p>
         )}
         <DialogDescription className="col-start-2 col-span-3 text-sm text-gray-500">
