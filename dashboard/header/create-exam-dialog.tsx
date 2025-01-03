@@ -1,6 +1,8 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { UseFormReturn } from "react-hook-form";
+import { Session } from "next-auth";
 
 import { z } from "zod";
 
@@ -41,8 +43,11 @@ const examFormSchema = z.object({
 type ExamFormValues = z.infer<typeof examFormSchema>;
 
 interface QuestionSelectProps {
-  form: any;
-  session: any;
+  form: UseFormReturn<{
+    examName: string;
+    questionsCount: string;
+  }>;
+  session: Session | null;
 }
 
 export const CreateExamDialog = () => {
