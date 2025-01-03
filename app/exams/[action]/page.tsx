@@ -14,7 +14,19 @@ export const metadata: Metadata = {
   keywords: "crear examen, exámenes online, herramienta educativa",
 };
 
-export default function CreateExamPage() {
+export default async function CreateExamPage({
+  params,
+  searchParams,
+}: {
+  params: { action: "create" | "edit" };
+  searchParams: { examId: string };
+}) {
+  const { action } = await params;
+  console.log({ action });
+
+  const { examId } = await searchParams;
+  console.log({ examId });
+
   return (
     <main>
       <section
@@ -27,7 +39,6 @@ export default function CreateExamPage() {
             <article className="lg:pr-4 w-full h-full order-last lg:order-first">
               <ExamPreview />
             </article>
-
             <div className="block w-full lg:relative order-first lg:order-last">
               <div className="hidden lg:h-[600px]" />
 

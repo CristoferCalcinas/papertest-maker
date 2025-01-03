@@ -1,4 +1,4 @@
-import { BreadcrumbTitle } from "./create/ui/breadcrumb-title";
+import { BreadcrumbTitle } from "./[action]/ui/breadcrumb-title";
 
 export default function ExamsLayout({
   children,
