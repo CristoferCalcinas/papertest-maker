@@ -80,7 +80,7 @@ export const useExamStore = create<ExamStore>((set, get) => ({
       ),
     }));
 
-    if (newQuestionId) return;
+    if (!newQuestionId) return;
 
     set((state) => ({
       exams: state.exams.map((exam) =>
