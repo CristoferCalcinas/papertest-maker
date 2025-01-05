@@ -68,16 +68,6 @@ export const useExamStore = create<ExamStore>((set, get) => ({
   },
 
   changeCorrectAnswers: (idQuestion, correctAnswers, newQuestionId) => {
-    if (!newQuestionId) {
-      set((state) => ({
-        exams: state.exams.map((exam) =>
-          exam.id === idQuestion
-            ? { ...exam, completionAnswers: correctAnswers, status: "reviewed" }
-            : exam
-        ),
-      }));
-      return;
-    }
     set((state) => ({
       exams: state.exams.map((exam) =>
         exam.id === idQuestion
@@ -85,6 +75,18 @@ export const useExamStore = create<ExamStore>((set, get) => ({
               ...exam,
               completionAnswers: correctAnswers,
               status: "reviewed",
+            }
+          : exam
+      ),
+    }));
+
+    if (newQuestionId) return;
+
+    set((state) => ({
+      exams: state.exams.map((exam) =>
+        exam.id === newQuestionId
+          ? {
+              ...exam,
               id: newQuestionId,
             }
           : exam
