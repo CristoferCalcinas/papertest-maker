@@ -95,6 +95,8 @@ export const useExamStore = create<ExamStore>((set, get) => ({
   },
 
   hydrate: (exams) => {
+    if (get().isHydrated) return;
+
     set({
       exams,
       isHydrated: true,

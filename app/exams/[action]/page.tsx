@@ -16,13 +16,12 @@ export const metadata: Metadata = {
   keywords: "crear examen, exámenes online, herramienta educativa",
 };
 
-export default async function CreateExamPage({
-  params,
-  searchParams,
-}: {
-  params: { action: string };
-  searchParams: { examId?: string };
-}) {
+interface Props {
+  params: Promise<{ action: string }>;
+  searchParams: Promise<{ examId?: string }>;
+}
+
+export default async function CreateExamPage({ params, searchParams }: Props) {
   const { action } = await params;
   const { examId } = await searchParams;
 
@@ -47,6 +46,15 @@ export default async function CreateExamPage({
       id: true,
       title: true,
       answersCount: true,
+      questions: {
+        select: {
+          id: true,
+          question: true,
+          correctAnswer: true,
+          createdAt: true,
+          distractors: true,
+        },
+      },
     },
   });
 
@@ -76,7 +84,11 @@ export default async function CreateExamPage({
                   </h1>
 
                   <div className="w-full">
-                    <ExamForm answersCount={exam.answersCount} id={exam.id} />
+                    <ExamForm
+                      answersCount={exam.answersCount}
+                      id={exam.id}
+                      questions={exam.questions}
+                    />
                     <ExamFormDivider />
                   </div>
                 </div>

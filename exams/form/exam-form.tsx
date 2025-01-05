@@ -26,20 +26,42 @@ import { FormSchema, FormSchemaType } from "../schemas/exam-schemas";
 
 import { generateToastMessage } from "../helpers/generateToastMessage";
 import { processAnswers } from "../actions/generate-answers";
+import { processOpenAIResponse } from "../helpers/process-openia-response";
 
 interface Props {
   id: string;
   answersCount: number;
+  questions: {
+    question: string;
+    id: string;
+    createdAt: Date;
+    correctAnswer: string;
+    distractors: any;
+  }[];
 }
 
-export const ExamForm = ({ id: idExam, answersCount }: Props) => {
+export const ExamForm = ({ id: idExam, answersCount, questions }: Props) => {
   const {
     addExam,
     updateExam,
     clearEditing,
     changeCorrectAnswers,
+    hydrate,
     selectedQuestion,
   } = useExamStore();
+
+  if (questions) {
+    const questionsFormat: Exam[] = questions.map((question) => ({
+      id: question.id,
+      question: question.question,
+      correctAnswer: question.correctAnswer,
+      createdAt: question.createdAt,
+      status: "reviewed",
+      completionAnswers: processOpenAIResponse(question.distractors.choices[0]?.message?.content).map(distractor => distractor.answer),
+    }));
+
+    hydrate(questionsFormat);
+  }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
