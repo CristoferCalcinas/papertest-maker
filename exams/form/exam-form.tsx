@@ -33,13 +33,13 @@ interface Props {
 }
 
 export const ExamForm = ({ id: idExam, answersCount }: Props) => {
-  const selectedQuestion = useExamStore((state) => state.selectedQuestion);
-  const addExam = useExamStore((state) => state.addExam);
-  const updateExam = useExamStore((state) => state.updateExam);
-  const clearEditing = useExamStore((state) => state.clearEditing);
-  const changeCorrectAnswers = useExamStore(
-    (state) => state.changeCorrectAnswers
-  );
+  const {
+    addExam,
+    updateExam,
+    clearEditing,
+    changeCorrectAnswers,
+    selectedQuestion,
+  } = useExamStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
