@@ -74,27 +74,19 @@ export const ExamForm = ({ id: idExam, answersCount }: Props) => {
 
     try {
       if (selectedQuestion) {
-        // Modo edición
+        // En el Modo edición no se pueden regenerar las respuestas
         updateExam(selectedQuestion.id, data);
-
-        const answers = await processAnswers(
-          data.question,
-          data.correctAnswer,
-          answersCount
-        );
-
-        changeCorrectAnswers(selectedQuestion.id, answers);
       } else {
-        // Modo creación
-        const examAdded = addExam(data);
+        const tempExam = addExam(data);
 
-        const answers = await processAnswers(
+        const { answers, questionId } = await processAnswers(
           data.question,
           data.correctAnswer,
-          answersCount
+          answersCount,
+          idExam
         );
 
-        changeCorrectAnswers(examAdded.id, answers);
+        changeCorrectAnswers(tempExam.id, answers, questionId);
       }
     } catch (error) {
       toast({

@@ -15,7 +15,11 @@ interface ExamActions {
   deleteExam: (id: string) => void;
   clearEditing: () => void;
   editQuestion: (id: string) => void;
-  changeCorrectAnswers: (idQuestion: string, correctAnswers: string[]) => void;
+  changeCorrectAnswers: (
+    idQuestion: string,
+    correctAnswers: string[],
+    newQuestionId?: string
+  ) => void;
   hydrate: (exams: Exam[]) => void;
 }
 
@@ -63,11 +67,26 @@ export const useExamStore = create<ExamStore>((set, get) => ({
     set({ selectedQuestion: exam || null });
   },
 
-  changeCorrectAnswers: (idQuestion, correctAnswers) => {
+  changeCorrectAnswers: (idQuestion, correctAnswers, newQuestionId) => {
+    if (!newQuestionId) {
+      set((state) => ({
+        exams: state.exams.map((exam) =>
+          exam.id === idQuestion
+            ? { ...exam, completionAnswers: correctAnswers, status: "reviewed" }
+            : exam
+        ),
+      }));
+      return;
+    }
     set((state) => ({
       exams: state.exams.map((exam) =>
         exam.id === idQuestion
-          ? { ...exam, completionAnswers: correctAnswers, status: "reviewed" }
+          ? {
+              ...exam,
+              completionAnswers: correctAnswers,
+              status: "reviewed",
+              id: newQuestionId,
+            }
           : exam
       ),
     }));
