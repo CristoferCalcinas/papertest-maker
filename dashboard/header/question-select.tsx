@@ -29,7 +29,7 @@ export const QuestionSelect = ({ form, session }: QuestionSelectProps) => {
       }}
     >
       <SelectTrigger className="col-span-3">
-        <SelectValue placeholder="Selecciona el número de preguntas" />
+        <SelectValue placeholder="¿Cuántas respuestas desea por pregunta?" />
       </SelectTrigger>
       <SelectContent>
         {Array.from({ length: totalQuestions }, (_, i) => {
