@@ -22,7 +22,7 @@ export const CreateExamDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="hover:underline" variant="default">
-          <span className="hidden md:block tracking-tighter">Crear Examen</span>
+          <span className="hidden md:block tracking-tighter">Nuevo Examen</span>
           <MdAddCircleOutline className="md:hidden" />
         </Button>
       </DialogTrigger>
