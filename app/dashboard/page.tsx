@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
@@ -18,6 +19,11 @@ import {
 } from "@/components/ui/sidebar";
 
 import { DashboardHome } from "@/dashboard/dashboard-home";
+
+export const metadata: Metadata = {
+  title: "Dashboard de Exámenes",
+  description: "Panel de control para la gestión y análisis de exámenes",
+};
 
 export default async function Page() {
   const session = await auth();
