@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CreateExamDialog } from "@/dashboard/header/create-exam-dialog";
 
 interface TopBarProps {
   onSort: (sortType: "date" | "title" | "questions") => void;
@@ -49,7 +50,7 @@ export function ExamsCardHeader({
         <Button onClick={onViewToggle} variant="outline">
           {view === "grid" ? "Lista" : "Tarjetas"}
         </Button>
-        <Button>Nuevo Examen</Button>
+        <CreateExamDialog />
       </div>
     </div>
   );
