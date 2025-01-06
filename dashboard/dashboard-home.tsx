@@ -1,7 +1,7 @@
 import { EmptyState } from "./empty/empty-state";
 import { ExamList } from "./list-main/exam-list";
 import { PageHeader } from "./header/page-header";
-import { RecentExams } from "./recent/recent-exams";
+import { StadisticsTabs } from "./dashboard-stadistics/stadistics-tabs";
 
 interface Exam {
   createdAt: string;
@@ -186,123 +186,9 @@ const exams: Exam[] = [
   },
 ];
 
-const tests = [
-  {
-    imageUrl: "/math.jpg",
-    createdAt: "Feb 1, 2024",
-    description: "Algebra and calculus fundamentals",
-    grade: "Grade 12 Math",
-    lastModifiedAt: "Feb 15, 2024",
-    questions: "40",
-    subject: "Mathematics",
-    title: "Advanced Mathematics Quiz",
-    id: "1",
-  },
-  {
-    imageUrl: "/physics.jpg",
-    createdAt: "Feb 3, 2024",
-    description: "Mechanics and thermodynamics",
-    grade: "Grade 11 Physics",
-    lastModifiedAt: "Feb 16, 2024",
-    questions: "30",
-    subject: "Physics",
-    title: "Classical Mechanics Test",
-    id: "2",
-  },
-  {
-    imageUrl: "/chemistry.jpg",
-    createdAt: "Feb 5, 2024",
-    description: "Organic chemistry basics",
-    grade: "Grade 11 Chemistry",
-    lastModifiedAt: "Feb 17, 2024",
-    questions: "35",
-    subject: "Chemistry",
-    title: "Organic Chemistry Exam",
-    id: "3",
-  },
-  {
-    imageUrl: "/biology.jpg",
-    createdAt: "Feb 7, 2024",
-    description: "Cell biology and genetics",
-    grade: "Grade 10 Biology",
-    lastModifiedAt: "Feb 18, 2024",
-    questions: "45",
-    subject: "Biology",
-    title: "Cell Biology Assessment",
-    id: "4",
-  },
-  {
-    imageUrl: "/literature.jpg",
-    createdAt: "Feb 9, 2024",
-    description: "Shakespeare and modern literature",
-    grade: "Grade 12 Literature",
-    lastModifiedAt: "Feb 19, 2024",
-    questions: "25",
-    subject: "Literature",
-    title: "World Literature Quiz",
-    id: "5",
-  },
-  {
-    imageUrl: "/history.jpg",
-    createdAt: "Feb 11, 2024",
-    description: "World War II and aftermath",
-    grade: "Grade 11 History",
-    lastModifiedAt: "Feb 20, 2024",
-    questions: "50",
-    subject: "History",
-    title: "Modern History Test",
-    id: "6",
-  },
-  {
-    imageUrl: "/geography.jpg",
-    createdAt: "Feb 13, 2024",
-    description: "World geography and climate",
-    grade: "Grade 10 Geography",
-    lastModifiedAt: "Feb 21, 2024",
-    questions: "30",
-    subject: "Geography",
-    title: "Global Geography Quiz",
-    id: "7",
-  },
-  {
-    imageUrl: "/computer-science.jpg",
-    createdAt: "Feb 15, 2024",
-    description: "Programming fundamentals",
-    grade: "Grade 12 CS",
-    lastModifiedAt: "Feb 22, 2024",
-    questions: "40",
-    subject: "Computer Science",
-    title: "Programming Basics",
-    id: "8",
-  },
-  {
-    imageUrl: "/economics.jpg",
-    createdAt: "Feb 17, 2024",
-    description: "Microeconomics principles",
-    grade: "Grade 11 Economics",
-    lastModifiedAt: "Feb 23, 2024",
-    questions: "35",
-    subject: "Economics",
-    title: "Economics Fundamentals",
-    id: "9",
-  },
-  {
-    imageUrl: "/spanish.jpg",
-    createdAt: "Feb 19, 2024",
-    description: "Spanish grammar and vocabulary",
-    grade: "Grade 10 Spanish",
-    lastModifiedAt: "Feb 24, 2024",
-    questions: "45",
-    subject: "Spanish",
-    title: "Spanish Language Test",
-    id: "10",
-  },
-];
-
 // const exams: Exam[] = [];
-// const tests: Exam[] = [];
 export const DashboardHome = () => {
-  if (!exams.length || !tests.length) {
+  if (!exams.length) {
     return <EmptyState />;
   }
 
@@ -312,7 +198,7 @@ export const DashboardHome = () => {
 
       <ExamList exams={exams} />
 
-      <RecentExams tests={tests} />
+      <StadisticsTabs />
     </>
   );
 };
