@@ -34,9 +34,13 @@ export function ExamsCard({ exam, view }: ExamCardProps) {
             {exam.status}
           </Badge>
         </div>
-        {exam.project && (
-          <Badge variant="outline" className="mt-2">
+        {exam.project ? (
+          <Badge variant="default" className="mt-2 text-center">
             {exam.project}
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="mt-2">
+            Sin proyecto
           </Badge>
         )}
       </CardHeader>
@@ -44,16 +48,32 @@ export function ExamsCard({ exam, view }: ExamCardProps) {
         <p className="text-sm text-gray-500 mb-2">
           Creado el {exam.createdAt.toLocaleDateString()}
         </p>
-        <Badge variant="secondary" className="mb-4">
-          {exam.questionCount} preguntas
-        </Badge>
+        {exam.questionCount > 0 ? (
+          <Badge variant="secondary" className="mb-4">
+            {exam.questionCount} preguntas
+          </Badge>
+        ) : (
+          <Badge variant="destructive" className="mb-4 w-full">
+            Sin preguntas
+          </Badge>
+        )}
+
         <div className="text-sm">
-          <strong>Primeras preguntas:</strong>
-          <ul className="list-disc list-inside mt-2">
-            {exam.questions.slice(0, 2).map((question, index) => (
-              <li key={index}>{question}</li>
-            ))}
-          </ul>
+          {exam.questions.length > 0 ? (
+            <>
+              <strong>Primeras preguntas:</strong>
+
+              <ul className="list-disc list-inside mt-2">
+                {exam.questions.slice(0, 2).map((question, index) => (
+                  <li key={index}>{question}</li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <strong className="mt-2 w-full text-center">
+              <p>No hay preguntas</p>
+            </strong>
+          )}
         </div>
       </CardContent>
       <CardFooter

@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
-import { prisma } from "@/prisma";
+
+import { getAllExamsByUser } from "@/exams/actions/get-all-exams-by-user";
 
 import { RenderAllExams } from "@/exams/render-exams/render-all-exams";
 
@@ -8,18 +9,17 @@ export default async function ExamsPage() {
 
   if (!session) return null;
 
-  const exams = await prisma.exam.findMany({
-    where: { userId: session.user.id },
-  });
+  const exams = await getAllExamsByUser(session.user.id);
 
-  console.log({ exams });
+  if (!exams) return null;
 
   return (
     <div className="flex flex-col items-center">
-      <h1>Exams</h1>
-      <p>Here you can take exams</p>
+      <h1 className="text-4xl font-semibold text-center mt-8 mb-4">
+        Exámenes Todos los exámenes
+      </h1>
 
-      <RenderAllExams />
+      <RenderAllExams exams={exams} />
     </div>
   );
 }

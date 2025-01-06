@@ -9,32 +9,12 @@ import { ExamsCardHeader } from "@/exams/render-exams/exams-card-header";
 import { ExamsCard } from "@/exams/render-exams/exams-card";
 import type { Exam } from "@/exams/render-exams/types";
 
-const MOCK_EXAMS: Exam[] = [
-  {
-    id: "1",
-    title: "Matemáticas Avanzadas",
-    createdAt: new Date("2023-01-15"),
-    questionCount: 30,
-    project: "Ciencias",
-    status: "published",
-    questions: ["¿Cuál es la derivada de x^2?", "¿Qué es un número complejo?"],
-  },
-  {
-    id: "2",
-    title: "Historia Mundial",
-    createdAt: new Date("2023-02-20"),
-    questionCount: 50,
-    project: "Humanidades",
-    status: "draft",
-    questions: [
-      "¿En qué año comenzó la Segunda Guerra Mundial?",
-      "¿Quién fue Napoleón Bonaparte?",
-    ],
-  },
-];
+interface Props {
+  exams: Exam[];
+}
 
-export const RenderAllExams = () => {
-  const [exams, setExams] = useState<Exam[]>(MOCK_EXAMS);
+export const RenderAllExams = ({ exams: examsParam }: Props) => {
+  const [exams, setExams] = useState<Exam[]>(examsParam);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState<"date" | "title" | "questions">("date");
   const [searchTerm, setSearchTerm] = useState("");
