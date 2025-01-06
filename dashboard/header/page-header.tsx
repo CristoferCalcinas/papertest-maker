@@ -10,7 +10,9 @@ export const PageHeader = () => {
   return (
     <div>
       <section className="rounded-xl p-0 max-w-3xl mx-auto flex justify-between items-center xl:p-4">
-        <h1 className="text-4xl font-bold tracking-tighter ml-2">Dashboard</h1>
+        <h1 className="text-4xl font-bold tracking-tighter ml-2">
+          Ultimos exámenes
+        </h1>
         <nav className="flex gap-2">
           <CreateExamDialog />
 
