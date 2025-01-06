@@ -47,7 +47,7 @@ export function ExamsCardHeader({
           </SelectContent>
         </Select>
         <Button onClick={onViewToggle} variant="outline">
-          {view === "grid" ? "Lista" : "Grid"}
+          {view === "grid" ? "Lista" : "Tarjetas"}
         </Button>
         <Button>Nuevo Examen</Button>
       </div>
