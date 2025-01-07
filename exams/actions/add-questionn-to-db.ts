@@ -41,19 +41,28 @@ export const addQuestionToDb = async (
       throw new Error("El examen especificado no existe");
     }
 
-    const newQuestionId = await prisma.question.create({
-      data: {
-        examId,
-        question: question.trim(),
-        correctAnswer: correctAnswer.trim(),
-        distractors: distractors,
-      },
-      select: {
-        id: true,
-      },
-    });
+    return await prisma.$transaction(async (tx) => {
+      const newQuestion = await tx.question.create({
+        data: {
+          examId,
+          question: question.trim(),
+          correctAnswer: correctAnswer.trim(),
+          distractors: distractors,
+        },
+        select: {
+          id: true,
+        },
+      });
 
-    return newQuestionId;
+      await tx.exam.update({
+        where: { id: examId },
+        data: {
+          updatedAt: new Date(),
+        },
+      });
+
+      return newQuestion;
+    });
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Error al crear la pregunta: ${error.message}`);
