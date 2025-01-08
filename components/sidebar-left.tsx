@@ -14,6 +14,7 @@ import {
   Settings2,
   Sparkles,
   Trash2,
+  Newspaper,
 } from "lucide-react";
 
 import { NavFavorites } from "@/components/nav-favorites";
@@ -64,9 +65,9 @@ const data = {
       icon: Home,
     },
     {
-      title: "Inbox",
+      title: "Nuevo Examen",
       url: "/dashboard/new-exam",
-      icon: Inbox,
+      icon: Newspaper,
     },
   ],
   navSecondary: [
