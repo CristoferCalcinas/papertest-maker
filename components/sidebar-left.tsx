@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
+import { usePathname } from "next/navigation";
 import {
   AudioWaveform,
   Blocks,
@@ -13,19 +14,19 @@ import {
   Settings2,
   Sparkles,
   Trash2,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavFavorites } from "@/components/nav-favorites"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavWorkspaces } from "@/components/nav-workspaces"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavFavorites } from "@/components/nav-favorites";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavWorkspaces } from "@/components/nav-workspaces";
+import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // This is sample data.
 const data = {
@@ -59,15 +60,13 @@ const data = {
     },
     {
       title: "Home",
-      url: "#",
+      url: "/dashboard",
       icon: Home,
-      isActive: true,
     },
     {
       title: "Inbox",
-      url: "#",
+      url: "/dashboard/new-exam",
       icon: Inbox,
-      badge: "10",
     },
   ],
   navSecondary: [
@@ -256,16 +255,23 @@ const data = {
       ],
     },
   ],
-}
+};
 
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+
+  const navMainWithActive = data.navMain.map((item) => ({
+    ...item,
+    isActive: item.url === pathname,
+  }));
+
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainWithActive} />
       </SidebarHeader>
       <SidebarContent>
         <NavFavorites favorites={data.favorites} />
@@ -274,5 +280,5 @@ export function SidebarLeft({
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
