@@ -23,7 +23,7 @@ export const EmptyState = () => {
             <div className="absolute inset-0 flex items-end p-6">
               <div>
                 <h3 className="font-semibold text-white">
-                  <Link href={`/exams/create`}>
+                  <Link href={`/dashboard/new-exam`}>
                     <span className="absolute inset-0" />
                     Crear examen
                   </Link>
