@@ -57,7 +57,12 @@ export function Details() {
           Imagen del examen&nbsp;
           <span className="text-sm text-blue-500">(opcional)</span>
         </Label>
-        <ImageUpload onUpload={(url) => setValue("image", url)} />
+        <ImageUpload
+          onUpload={(url) => console.log("Imagen subida:", url)}
+          maxSizeInMB={2}
+          acceptedFormats={["image/jpeg", "image/png"]}
+          className="my-4"
+        />{" "}
         {errors.image && (
           <p className="text-red-500 text-sm mt-1">
             {errors.image.message as string}
