@@ -40,18 +40,8 @@ export function ExamManagement() {
     },
   });
 
-  const onSubmit = async (data: ExamFormData) => {
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Submitted data:", data);
-      setSuccess("¡Examen guardado exitosamente!");
-    } catch (err) {
-      setError("An error occurred while saving the exam. Please try again.");
-    }
-  };
-
-  const handleNext = async () => {
+  const handleNext = async (e: React.MouseEvent) => {
+    e.preventDefault();
     const isValid = await methods.trigger();
     if (isValid) {
       setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
@@ -62,10 +52,23 @@ export function ExamManagement() {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
+  const handleSubmit = async (data: ExamFormData) => {
+    try {
+      setError(null);
+      setSuccess(null);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Submitted data:", data);
+      setSuccess("¡Examen guardado exitosamente!");
+    } catch (err) {
+      setError("An error occurred while saving the exam. Please try again.");
+    }
+  };
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(handleSubmit)}
         className="max-w-4xl mx-auto p-6"
       >
         <Stepper steps={steps} currentStep={currentStep} />
