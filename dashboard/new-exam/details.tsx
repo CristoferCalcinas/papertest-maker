@@ -58,7 +58,10 @@ export function Details() {
           <span className="text-sm text-blue-500">(opcional)</span>
         </Label>
         <ImageUpload
-          onUpload={(url) => console.log("Imagen subida:", url)}
+          onUpload={(url) => {
+            console.log("Imagen subida:", url);
+            setValue("image", url);
+          }}
           maxSizeInMB={2}
           acceptedFormats={["image/jpeg", "image/png"]}
           className="my-4"
