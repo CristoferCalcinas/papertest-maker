@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Upload, X, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -11,6 +11,7 @@ interface ImageUploadProps {
   height?: number;
   aspectRatio?: number;
   className?: string;
+  currentImage?: string;
 }
 
 export function ImageUpload({
@@ -21,8 +22,11 @@ export function ImageUpload({
   height,
   aspectRatio,
   className = "",
+  currentImage,
 }: ImageUploadProps) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    currentImage || null
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -147,6 +151,12 @@ export function ImageUpload({
   const handleUploadClick = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
+
+  useEffect(() => {
+    if (currentImage) {
+      setPreviewUrl(currentImage);
+    }
+  }, [currentImage]);
 
   return (
     <div className={`mt-2 ${className}`}>

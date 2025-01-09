@@ -15,7 +15,12 @@ export function Details() {
     register,
     formState: { errors },
     setValue,
+    watch,
   } = useFormContext();
+
+  // Observar el valor actual de la imagen
+  const currentImage = watch("image");
+  const currentDifficulty = watch("difficulty");
 
   return (
     <div className="space-y-4">
@@ -36,7 +41,13 @@ export function Details() {
       </div>
       <div>
         <Label htmlFor="difficulty">Dificultad del examen</Label>
-        <Select onValueChange={(value) => setValue("difficulty", value)}>
+        <Select
+          onValueChange={(value) => setValue("difficulty", value)}
+          value={currentDifficulty || ""}
+          {...register("difficulty", {
+            required: "La dificultad es requerida",
+          })}
+        >
           <SelectTrigger id="difficulty">
             <SelectValue placeholder="Selecciona la dificultad del examen" />
           </SelectTrigger>
@@ -62,7 +73,8 @@ export function Details() {
           maxSizeInMB={2}
           acceptedFormats={["image/jpeg", "image/png"]}
           className="my-4"
-        />{" "}
+          currentImage={currentImage}
+        />
         {errors.image && (
           <p className="text-red-500 text-sm mt-1">
             {errors.image.message as string}
