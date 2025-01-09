@@ -28,22 +28,6 @@ enum Grade {
   TWELFTH_GRADE
   UNIVERSITY
   PROFESSIONAL
-}
-
-enum Subject {
-  MATHEMATICS
-  SCIENCE
-  HISTORY
-  LANGUAGE
-  LITERATURE
-  PHYSICS
-  CHEMISTRY
-  BIOLOGY
-  GEOGRAPHY
-  ARTS
-  MUSIC
-  PHYSICAL_EDUCATION
-  TECHNOLOGY
   OTHER
 }
 
@@ -51,6 +35,7 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+  VERY_HARD
 }
 
 enum ExamStatus {
@@ -189,15 +174,15 @@ model Project {
 }
 
 model Exam {
-  id          String     @id @default(uuid())
+  id          String      @id @default(uuid())
   title       String
   description String?
-  grade       Grade?
-  subject     Subject?
+  grade       Grade?      @default(OTHER)
+  subject     String?
   imageUrl    String?
   difficulty  Difficulty? @default(MEDIUM)
   status      ExamStatus? @default(DRAFT)
-  isPublic    Boolean    @default(true)
+  isPublic    Boolean     @default(true)
 
   projectId String?
   project   Project?   @relation(fields: [projectId], references: [id])
