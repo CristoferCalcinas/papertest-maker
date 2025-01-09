@@ -13,8 +13,7 @@ export default function ExamsLayout({
       <div className="mt-10 pl-5">
         <BreadcrumbTitle />
       </div>
-
-      {children}
+      <main className="container mx-auto px-4">{children}</main>
     </section>
   );
 }

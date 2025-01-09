@@ -63,40 +63,38 @@ export default async function CreateExamPage({ params, searchParams }: Props) {
   }
 
   return (
-    <main>
-      <section
-        className="bg-white py-8 sm:py-12"
-        role="region"
-        aria-label="Formulario de creación de examen"
-      >
-        <div className="mx-auto max-w-7xl px-2 lg:px-8">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 sm:gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-            <article className="lg:pr-4 w-full h-full order-last lg:order-first">
-              <ExamPreview />
-            </article>
-            <div className="block w-full lg:relative order-first lg:order-last">
-              <div className="hidden lg:h-[600px]" />
+    <section
+      className="bg-white py-8 sm:py-12"
+      role="region"
+      aria-label="Formulario de creación de examen"
+    >
+      <div className="mx-auto max-w-7xl px-2 lg:px-8">
+        <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 sm:gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+          <article className="lg:pr-4 w-full h-full order-last lg:order-first">
+            <ExamPreview />
+          </article>
+          <div className="block w-full lg:relative order-first lg:order-last">
+            <div className="hidden lg:h-[600px]" />
 
-              <article className="lg:fixed lg:top-1/2 lg:-translate-y-1/2 p-2 border border-gray-200 rounded-lg bg-white shadow-sm">
-                <div className="text-base/7 text-gray-700">
-                  <h1 className="text-base/7 font-semibold text-[#1E3A8A] text-right pr-1 italic">
-                    {exam.title}
-                  </h1>
+            <article className="lg:fixed lg:top-1/2 lg:-translate-y-1/2 p-2 border border-gray-200 rounded-lg bg-white shadow-sm">
+              <div className="text-base/7 text-gray-700">
+                <h1 className="text-base/7 font-semibold text-[#1E3A8A] text-right pr-1 italic">
+                  {exam.title}
+                </h1>
 
-                  <div className="w-full">
-                    <ExamForm
-                      answersCount={exam.answersCount}
-                      id={exam.id}
-                      questions={exam.questions}
-                    />
-                    <ExamFormDivider />
-                  </div>
+                <div className="w-full">
+                  <ExamForm
+                    answersCount={exam.answersCount}
+                    id={exam.id}
+                    questions={exam.questions}
+                  />
+                  <ExamFormDivider />
                 </div>
-              </article>
-            </div>
+              </div>
+            </article>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }

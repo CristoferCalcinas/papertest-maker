@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { auth } from "@/auth";
 
 import { getAllExamsByUser } from "@/exams/actions/get-all-exams-by-user";
@@ -15,11 +17,20 @@ export default async function ExamsPage() {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-4xl font-semibold text-center mt-8 mb-4">
-        Exámenes Todos los exámenes
-      </h1>
+      <h1 className="text-4xl font-semibold text-center mt-8 mb-4">Exámenes</h1>
 
-      <RenderAllExams exams={exams} />
+      {!exams?.length ? (
+        <div className="flex flex-col items-center space-y-4 mt-8">
+          <p className="text-center text-xl font-semibold text-gray-600">
+            No hay exámenes disponibles
+          </p>
+          <Link href="/dashboard/new-exam" className="underline">
+            Crea tu primer examen
+          </Link>
+        </div>
+      ) : (
+        <RenderAllExams exams={exams} />
+      )}
     </div>
   );
 }
