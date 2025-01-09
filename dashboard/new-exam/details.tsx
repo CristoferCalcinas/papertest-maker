@@ -53,9 +53,10 @@ export function Details() {
             <SelectValue placeholder="Selecciona la dificultad del examen" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="easy">Easy</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="hard">Hard</SelectItem>
+            <SelectItem value="EASY">Fácil</SelectItem>
+            <SelectItem value="MEDIUM">Medio</SelectItem>
+            <SelectItem value="HARD">Difícil</SelectItem>
+            <SelectItem value="VERY_HARD">Muy difícil</SelectItem>
           </SelectContent>
         </Select>
         {errors.difficulty && (
