@@ -32,6 +32,7 @@ export function Details() {
             required: "La descripcion del examen es obligatoria",
           })}
           placeholder="Escribe una descripción del examen"
+          autoFocus
         />
         {errors.description && (
           <p className="text-red-500 text-sm mt-1">

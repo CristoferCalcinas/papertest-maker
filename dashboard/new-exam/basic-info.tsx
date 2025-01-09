@@ -16,6 +16,7 @@ export function BasicInfo() {
           id="title"
           {...register("title", { required: "El titulo es requerido" })}
           placeholder="Ingrese el titulo"
+          autoFocus
         />
         {errors.title && (
           <p className="text-red-500 text-sm mt-1">
