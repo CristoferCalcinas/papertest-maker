@@ -56,13 +56,13 @@ const SOCIAL_PROVIDERS: LoginOptionProps[] = [
   {
     name: "Facebook",
     icon: FaFacebook,
-    variant: "default",
+    variant: "secondary",
     provider: "facebook",
   },
   {
     name: "Github",
     icon: FaGithub,
-    variant: "secondary",
+    variant: "default",
     provider: "github",
   },
 ] as const;
