@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm, FormProvider } from "react-hook-form";
+import { AlertCircle, CheckCircle } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+
+import { uploadImage } from "../actions/upload-images";
+import { createAllExam } from "../actions/create-all-exam";
+
 import { Stepper } from "./stepper";
 import { BasicInfo } from "./basic-info";
 import { Details } from "./details";
 import { Review } from "./review";
-import { Button } from "@/components/ui/button";
-import { AlertCircle, CheckCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type ExamFormData = {
   title: string;
@@ -18,12 +25,15 @@ type ExamFormData = {
   subject: string;
   image: string;
   difficulty: string;
-  status: "draft" | "published" | "archived";
+  answersCount: number;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
 };
 
 const steps = ["Información Básica", "Detalles", "Revisión"];
 
 export function ExamManagement() {
+  const router = useRouter();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -36,7 +46,8 @@ export function ExamManagement() {
       subject: "",
       image: "",
       difficulty: "",
-      status: "draft",
+      answersCount: 3,
+      status: "DRAFT",
     },
   });
 
@@ -57,10 +68,21 @@ export function ExamManagement() {
       setError(null);
       setSuccess(null);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Submitted data:", data);
+      const imageUrl = await uploadImage(data.image);
+
+      const { image, ...examData } = data;
+
+      const resp = await createAllExam({ ...(examData as any) }, imageUrl);
+
+      if (!resp) {
+        throw new Error(
+          "No se pudo guardar el examen. Por favor, inténtelo de nuevo."
+        );
+      }
+
       setSuccess("¡Examen guardado exitosamente!");
+
+      router.push(`/exams/create?examId=${resp.id}`);
     } catch (err) {
       setError("An error occurred while saving the exam. Please try again.");
     }
@@ -72,39 +94,6 @@ export function ExamManagement() {
         className="max-w-4xl mx-auto p-6"
       >
         <Stepper steps={steps} currentStep={currentStep} />
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {currentStep === 0 && <BasicInfo />}
-            {currentStep === 1 && <Details />}
-            {currentStep === 2 && <Review />}
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="mt-8 flex justify-between">
-          <Button
-            type="button"
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            variant="outline"
-          >
-            Anterior
-          </Button>
-          {currentStep < steps.length - 1 ? (
-            <Button type="button" onClick={handleNext}>
-              Siguiente
-            </Button>
-          ) : (
-            <Button type="submit">Crear Preguntas</Button>
-          )}
-        </div>
-
         <AnimatePresence>
           {error && (
             <motion.div
@@ -140,6 +129,38 @@ export function ExamManagement() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {currentStep === 0 && <BasicInfo />}
+            {currentStep === 1 && <Details />}
+            {currentStep === 2 && <Review />}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="mt-8 flex justify-between">
+          <Button
+            type="button"
+            onClick={handlePrevious}
+            disabled={currentStep === 0}
+            variant="outline"
+          >
+            Anterior
+          </Button>
+          {currentStep < steps.length - 1 ? (
+            <Button type="button" onClick={handleNext}>
+              Siguiente
+            </Button>
+          ) : (
+            <Button type="submit">Crear Preguntas</Button>
+          )}
+        </div>
       </form>
     </FormProvider>
   );
