@@ -1,9 +1,13 @@
 import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
-import { prisma } from "@/prisma";
 
 import { SelectRole } from "@/auth/assign-role/select-role";
+
+const roles = [
+  { id: "TEACHER", name: "Profesor" },
+  { id: "STUDENT", name: "Estudiante" },
+];
 
 export default async function SelectRolePage() {
   const session = await auth();
@@ -12,16 +16,9 @@ export default async function SelectRolePage() {
     redirect("/auth/login");
   }
 
-  if (session.user.roleId !== "no-role-id") {
+  if (session.user.role) {
     redirect("/");
   }
-
-  const roles = await prisma.role.findMany({
-    select: {
-      name: true,
-      id: true,
-    },
-  });
 
   return (
     <main className="flex h-screen w-screen items-center justify-center">
