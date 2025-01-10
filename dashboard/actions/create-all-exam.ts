@@ -34,6 +34,7 @@ export const createAllExam = async (
         ...exam,
         imageUrl,
         userId: session.user.id,
+        answersCount: +exam.answersCount,
       },
       select: {
         id: true,

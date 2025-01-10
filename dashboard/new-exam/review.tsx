@@ -19,6 +19,15 @@ export function Review() {
           <p className="tracking-widest">- {formData.grade}</p>
         </div>
         <div>
+          <h3 className="font-semibold">Cantidad de respuestas del examen:</h3>
+          <p className="tracking-widest">
+            - {formData.answersCount}
+            <strong className="tracking-tighter pl-1 font-extralight italic">
+              respuestas por pregunta.
+            </strong>
+          </p>
+        </div>
+        <div>
           <h3 className="font-semibold">
             Asignatura del examen (Materia del examen):
           </h3>

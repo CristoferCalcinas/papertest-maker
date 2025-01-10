@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FaLock } from "react-icons/fa";
+import { Badge } from "@/components/ui/badge";
 
 const GRADES_OPTIONS = [
   { id: "FIRST_GRADE", name: "Primero" },
@@ -36,6 +40,11 @@ export function BasicInfo() {
   } = useFormContext();
 
   const currentGrade = watch("grade");
+
+  const { data: session } = useSession();
+
+  const isSubscribed = Boolean(session?.user?.subscription);
+  const totalQuestions = 9;
 
   return (
     <div className="space-y-4">
@@ -93,6 +102,47 @@ export function BasicInfo() {
             {errors.subject.message as string}
           </p>
         )}
+      </div>
+      <div>
+        <Label htmlFor="subject">Número de respuestas por pregunta</Label>
+
+        <Select
+          onValueChange={(value) => {
+            if (isSubscribed || ["2", "3"].includes(value)) {
+              setValue("answersCount", value);
+            }
+          }}
+          {...register("answersCount")}
+        >
+          <SelectTrigger className="col-span-3">
+            <SelectValue placeholder="¿Cuántas respuestas desea por pregunta?" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: totalQuestions }, (_, i) => {
+              const value = (i + 2).toString();
+              const isDisabled = !isSubscribed && !["2", "3"].includes(value);
+
+              return (
+                <SelectItem key={value} value={value} disabled={isDisabled}>
+                  <div className="flex items-center justify-between gap-2">
+                    <span>{value} Respuestas por Pregunta</span>
+                    {isDisabled && (
+                      <div className="flex items-center gap-1">
+                        <FaLock className="h-3 w-3 text-muted-foreground" />
+                        <Badge variant="secondary" className="text-xs">
+                          Pro
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+          <span className="text-xs text-muted-foreground italic pl-0 md:pl-5">
+            Por defecto, las preguntas tendrán 3 respuestas, pero puedes cambiar
+          </span>
+        </Select>
       </div>
     </div>
   );
