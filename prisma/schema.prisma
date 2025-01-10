@@ -44,13 +44,9 @@ enum ExamStatus {
   ARCHIVED
 }
 
-model Role {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  users User[]
+enum UserRole {
+  STUDENT
+  TEACHER
 }
 
 model User {
@@ -63,9 +59,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  roleId   String?
-  role     Role?   @relation(fields: [roleId], references: [id])
-  isActive Boolean @default(true)
+  role      UserRole @default(STUDENT)
+  isActive  Boolean  @default(true)
 
   subscription Subscription?
   projects     Project[]

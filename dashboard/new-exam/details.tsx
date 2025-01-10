@@ -10,6 +10,13 @@ import {
 } from "@/components/ui/select";
 import { ImageUpload } from "./image-upload";
 
+const DIFFICULTY_OPTIONS = [
+  { value: "EASY", label: "Fácil" },
+  { value: "MEDIUM", label: "Medio" },
+  { value: "HARD", label: "Difícil" },
+  { value: "VERY_HARD", label: "Muy difícil" },
+];
+
 export function Details() {
   const {
     register,
@@ -53,10 +60,11 @@ export function Details() {
             <SelectValue placeholder="Selecciona la dificultad del examen" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="EASY">Fácil</SelectItem>
-            <SelectItem value="MEDIUM">Medio</SelectItem>
-            <SelectItem value="HARD">Difícil</SelectItem>
-            <SelectItem value="VERY_HARD">Muy difícil</SelectItem>
+            {DIFFICULTY_OPTIONS.map(({ value, label }) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         {errors.difficulty && (
