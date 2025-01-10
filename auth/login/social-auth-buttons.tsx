@@ -38,7 +38,7 @@ const LoginOption = ({
       variant={variant}
       className="w-full flex items-center justify-center gap-2"
       type="submit"
-      onClick={() => signIn(provider, { redirectTo: "/" })}
+      onClick={() => signIn(provider, { redirect: false })}
     >
       Continuar con {name}
       <Icon className="w-5 h-5" />
