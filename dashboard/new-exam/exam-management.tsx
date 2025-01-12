@@ -26,7 +26,7 @@ type ExamFormData = {
   image: string;
   difficulty: string;
   answersCount: number;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  examStatus: "DRAFT" | "PUBLISHED" | "ARCHIVED";
 };
 
 const steps = ["Información Básica", "Detalles", "Revisión"];
@@ -47,7 +47,7 @@ export function ExamManagement() {
       image: "",
       difficulty: "",
       answersCount: 3,
-      status: "DRAFT",
+      examStatus: "DRAFT",
     },
   });
 

@@ -11,7 +11,7 @@ type CreateAllExam = {
   subject: string;
   difficulty: $Enums.Difficulty;
   grade: $Enums.Grade;
-  status: $Enums.ExamStatus;
+  examStatus: $Enums.ExamStatus;
 };
 
 export const createAllExam = async (
