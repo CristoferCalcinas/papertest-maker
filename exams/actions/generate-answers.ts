@@ -1,77 +1,121 @@
 "use server";
 
-import OpenAI from "openai";
+import { addQuestionToDb } from "./add-questionn-to-db";
+import { makeOpenAIRequest } from "./openai";
 
 import { buildPrompt } from "../helpers/buildPrompt";
+import { processOpenAIResponse } from "../helpers/process-openia-response";
 
-import type { DistractorResponse } from "../types/distractor-response.type";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-/**
- * Obtiene respuestas del API de OpenAI.
- * @param prompt - Prompt para enviar al API.
- * @param options - Configuración opcional para la petición.
- */
-async function fetchCompletion(prompt: string): Promise<DistractorResponse[]> {
-  try {
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo-0125",
-      temperature: 0.7,
-      max_tokens: 1500,
-      frequency_penalty: 0.3,
-      presence_penalty: 0.1,
-      response_format: { type: "json_object" },
-      seed: 123,
-    });
-
-    const response = completion.choices[0]?.message?.content;
-    if (!response) throw new Error("No response from OpenAI");
-
-    return JSON.parse(response).distractors;
-  } catch (error) {
-    console.error("[OpenAI Error]:", error);
-    throw error;
-  }
-}
+import type {
+  DistractorResponse,
+  OpenAIResponse,
+  ProcessedAnswers,
+} from "../types/openia-response.type";
 
 const DEFAULT_DISTRACTORS = 3;
 
+function validateInputParameters(
+  question: string,
+  answer: string,
+  numberOfDistractors: number
+): void {
+  if (!question?.trim() || !answer?.trim()) {
+    throw new Error("La pregunta y la respuesta son requeridas");
+  }
+
+  if (numberOfDistractors < 1) {
+    throw new Error("El número de distractores debe ser mayor a 0");
+  }
+}
+
 /**
- * Genera respuestas distractoras para una pregunta.
- * @param question - Pregunta para generar distractores.
- * @param answer - Respuesta correcta.
- * @param numberOfDistractors - Número de distractores a generar.
+ * Obtiene respuestas del API de OpenAI y guarda la pregunta en la base de datos
+ */
+async function fetchCompletion(
+  prompt: string,
+  idExam: string,
+  correctAnswer: string,
+  question: string
+): Promise<OpenAIResponse> {
+  try {
+    const completion = await makeOpenAIRequest(prompt);
+    const response = completion.choices[0]?.message?.content;
+
+    if (!response) {
+      throw new Error("Respuesta vacía de OpenAI");
+    }
+
+    const newQuestion = await addQuestionToDb(
+      question,
+      idExam,
+      correctAnswer,
+      completion
+    );
+
+    if (!newQuestion) {
+      throw new Error("Error al guardar la pregunta en la base de datos");
+    }
+
+    return {
+      questionId: newQuestion.id,
+      distractors: processOpenAIResponse(response),
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error al generar respuestas: ${error.message}`);
+    }
+    throw new Error("Error inesperado al generar respuestas");
+  }
+}
+
+/**
+ * Genera respuestas distractoras para una pregunta
+ * @throws {ValidationError | OpenAIError | DatabaseError}
  */
 async function generateAnswers(
   question: string,
   answer: string,
+  idExam: string,
   numberOfDistractors = DEFAULT_DISTRACTORS
-): Promise<DistractorResponse[]> {
-  if (!question?.trim() || !answer?.trim()) {
-    throw new Error("Question and answer are required");
-  }
+): Promise<OpenAIResponse> {
+  validateInputParameters(question, answer, numberOfDistractors);
 
   try {
     const prompt = buildPrompt(question, answer, numberOfDistractors);
-    return await fetchCompletion(prompt);
+    return await fetchCompletion(prompt, idExam, answer, question);
   } catch (error) {
-    console.error("[Generate Answers Error]:", error);
-    return [];
+    if (error instanceof Error) {
+      throw new Error(`Error al generar respuestas: ${error.message}`);
+    }
+    throw new Error("Error inesperado al generar respuestas");
   }
 }
 
-export const processAnswers = async (
+/**
+ * Procesa las respuestas y retorna el formato final
+ * @throws {Error} Si no se pueden generar las respuestas
+ */
+export async function processAnswers(
   question: string,
-  correctAnswer: string
-) => {
-  const generatedDistractors = await generateAnswers(question, correctAnswer);
+  correctAnswer: string,
+  numberOfDistractors: number,
+  idExam: string
+): Promise<ProcessedAnswers> {
+  const generatedDistractors = await generateAnswers(
+    question,
+    correctAnswer,
+    idExam,
+    numberOfDistractors
+  );
 
-  if (!generatedDistractors) throw new Error("No se pudo generar respuestas");
+  if (!generatedDistractors) {
+    throw new Error("No se pudieron generar las respuestas");
+  }
 
-  const answers = generatedDistractors.map((r) => r.answer);
-  return answers;
-};
+  return {
+    questionId: generatedDistractors.questionId,
+    answers: generatedDistractors.distractors.map(
+      (distractor: DistractorResponse) => distractor.answer
+    ),
+  };
+}

@@ -26,15 +26,42 @@ import { FormSchema, FormSchemaType } from "../schemas/exam-schemas";
 
 import { generateToastMessage } from "../helpers/generateToastMessage";
 import { processAnswers } from "../actions/generate-answers";
+import { processOpenAIResponse } from "../helpers/process-openia-response";
 
-export const ExamForm = () => {
-  const selectedQuestion = useExamStore((state) => state.selectedQuestion);
-  const addExam = useExamStore((state) => state.addExam);
-  const updateExam = useExamStore((state) => state.updateExam);
-  const clearEditing = useExamStore((state) => state.clearEditing);
-  const changeCorrectAnswers = useExamStore(
-    (state) => state.changeCorrectAnswers
-  );
+interface Props {
+  id: string;
+  answersCount: number;
+  questions: {
+    question: string;
+    id: string;
+    createdAt: Date;
+    correctAnswer: string;
+    distractors: any;
+  }[];
+}
+
+export const ExamForm = ({ id: idExam, answersCount, questions }: Props) => {
+  const {
+    addExam,
+    updateExam,
+    clearEditing,
+    changeCorrectAnswers,
+    hydrate,
+    selectedQuestion,
+  } = useExamStore();
+
+  if (questions) {
+    const questionsFormat: Exam[] = questions.map((question) => ({
+      id: question.id,
+      question: question.question,
+      correctAnswer: question.correctAnswer,
+      createdAt: question.createdAt,
+      status: "reviewed",
+      completionAnswers: processOpenAIResponse(question.distractors.choices[0]?.message?.content).map(distractor => distractor.answer),
+    }));
+
+    hydrate(questionsFormat);
+  }
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -69,19 +96,19 @@ export const ExamForm = () => {
 
     try {
       if (selectedQuestion) {
-        // Modo edición
+        // En el Modo edición no se pueden regenerar las respuestas
         updateExam(selectedQuestion.id, data);
-
-        const answers = await processAnswers(data.question, data.correctAnswer);
-
-        changeCorrectAnswers(selectedQuestion.id, answers);
       } else {
-        // Modo creación
-        const examAdded = addExam(data);
+        const tempExam = addExam(data);
 
-        const answers = await processAnswers(data.question, data.correctAnswer);
+        const { answers, questionId } = await processAnswers(
+          data.question,
+          data.correctAnswer,
+          answersCount,
+          idExam
+        );
 
-        changeCorrectAnswers(examAdded.id, answers);
+        changeCorrectAnswers(tempExam.id, answers, questionId);
       }
     } catch (error) {
       toast({

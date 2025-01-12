@@ -1,54 +1,43 @@
-import { redirect } from "next/navigation";
-
 import { auth } from "@/auth";
-
-import { SidebarLeft } from "@/components/sidebar-left";
-import { SidebarRight } from "@/components/sidebar-right";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { prisma } from "@/prisma";
+import { redirect } from "next/navigation";
 
 import { DashboardHome } from "@/dashboard/dashboard-home";
 
 export default async function Page() {
   const session = await auth();
-  if (session?.user.roleId === "no-role-id") {
-    redirect("/auth/select-role");
-  }
-  return (
-    <SidebarProvider>
-      <SidebarLeft />
-      <SidebarInset>
-        <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background z-50">
-          <div className="flex flex-1 items-center gap-2 px-3">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="line-clamp-1">
-                    Paper Test Maker
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
 
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <DashboardHome />
-        </div>
-      </SidebarInset>
-      <SidebarRight />
-    </SidebarProvider>
+  if (!session?.user.id) {
+    redirect("/auth/login");
+  }
+
+  const examtodb = await prisma.exam.findMany({
+    where: { userId: session.user.id },
+    orderBy: { updatedAt: "desc" },
+    include: { questions: true },
+  });
+
+  const formattedExams = examtodb.map((exam) => {
+    const questionCount = exam.questions.length;
+    const titleCapitalized =
+      exam.title.charAt(0).toUpperCase() + exam.title.slice(1);
+
+    return {
+      createdAt: exam.createdAt.toDateString(),
+      description: exam.description || "SIN-DESCRIPCION",
+      grade: exam.grade || "SIN-GRADO",
+      id: exam.id,
+      imageUrl: exam.imageUrl || "/pila-de-libros.jpg",
+      lastModifiedAt: exam.updatedAt.toDateString(),
+      questions: questionCount.toString(),
+      subject: exam.subject || "SIN-MATERIA",
+      title: titleCapitalized,
+    };
+  });
+
+  return (
+    <>
+      <DashboardHome exams={formattedExams.slice(0, 2)} />;
+    </>
   );
 }

@@ -1,9 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// This is your Prisma schema file
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,76 +8,125 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  users User[]
+// --------- ENUMS ---------
+enum RecordStatus {
+  ACTIVE
+  HIDDEN
+  ARCHIVED
+  DELETED
 }
 
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum Grade {
+  FIRST_GRADE
+  SECOND_GRADE
+  THIRD_GRADE
+  FOURTH_GRADE
+  FIFTH_GRADE
+  SIXTH_GRADE
+  SEVENTH_GRADE
+  EIGHTH_GRADE
+  NINTH_GRADE
+  TENTH_GRADE
+  ELEVENTH_GRADE
+  TWELFTH_GRADE
+  UNIVERSITY
+  PROFESSIONAL
+  OTHER
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  VERY_HARD
+}
+
+enum ExamStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// --------- AUTHENTICATION MODELS ---------
 model User {
-  id            String          @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String?
-  email         String          @unique
+  email         String       @unique
   password      String?
   emailVerified DateTime?
   image         String?
+  role          UserRole     @default(STUDENT)
+  status        RecordStatus @default(ACTIVE)
+  deletedAt     DateTime?
+
+  // Relaciones
   accounts      Account[]
   sessions      Session[]
-
-  roleId String?
-  role   Role?   @relation(fields: [roleId], references: [id])
-  isActive Boolean @default(true)
-
-  // Optional for WebAuthn support
   Authenticator Authenticator[]
- 
+  subscription  Subscription?
+  projects      Project[]
+  exams         Exam[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
 }
- 
+
 model Account {
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
- 
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
-  @@id([identifier, token])
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, token])
 }
- 
-// Optional for WebAuthn support
+
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -92,8 +136,130 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([userId, credentialID])
+
+  @@unique([userId, credentialID])
+  @@index([userId])
+  @@index([credentialID])
+}
+
+// --------- SUBSCRIPTION MODELS ---------
+model Plan {
+  id           String       @id @default(uuid())
+  name         String
+  description  String?
+  maxExams     Int
+  maxQuestions Int
+  price        Decimal
+  interval     String
+  features     Json?
+  status       RecordStatus @default(ACTIVE)
+  deletedAt    DateTime?
+
+  subscriptions Subscription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}
+
+model Subscription {
+  id              String             @id @default(uuid())
+  userId          String             @unique
+  planId          String
+  startDate       DateTime           @default(now())
+  endDate         DateTime
+  status          SubscriptionStatus @default(ACTIVE)
+  recordStatus    RecordStatus       @default(ACTIVE) // Añadido para consistencia
+  deletedAt       DateTime?
+  cancelReason    String?
+  paymentId       String?
+  autoRenew       Boolean            @default(true)
+  lastBillingDate DateTime?
+  nextBillingDate DateTime?
+
+  // Relaciones
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([endDate])
+  @@index([recordStatus])
+}
+
+// --------- CORE BUSINESS MODELS ---------
+model Project {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  userId      String
+  status      RecordStatus @default(ACTIVE)
+  deletedAt   DateTime?
+
+  // Relaciones
+  user  User   @relation(fields: [userId], references: [id])
+  exams Exam[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
+}
+
+model Exam {
+  id           String       @id @default(uuid())
+  title        String
+  description  String?
+  grade        Grade?       @default(OTHER)
+  subject      String?
+  imageUrl     String?
+  difficulty   Difficulty?  @default(MEDIUM)
+  examStatus   ExamStatus   @default(DRAFT)
+  isPublic     Boolean      @default(true)
+  status       RecordStatus @default(ACTIVE)
+  deletedAt    DateTime?
+  answersCount Int          @default(0)
+
+  // Relaciones
+  projectId String?
+  userId    String
+  project   Project?   @relation(fields: [projectId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+  questions Question[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([grade])
+  @@index([subject])
+  @@index([status])
+  @@index([examStatus])
+}
+
+model Question {
+  id            String       @id @default(uuid())
+  examId        String
+  question      String       @db.Text
+  correctAnswer String       @db.Text
+  distractors   Json
+  status        RecordStatus @default(ACTIVE)
+  deletedAt     DateTime?
+
+  // Relaciones
+  exam Exam @relation(fields: [examId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([examId])
+  @@index([status])
 }

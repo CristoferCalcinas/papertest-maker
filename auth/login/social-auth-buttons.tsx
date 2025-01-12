@@ -38,7 +38,7 @@ const LoginOption = ({
       variant={variant}
       className="w-full flex items-center justify-center gap-2"
       type="submit"
-      onClick={() => signIn(provider, { redirectTo: "/" })}
+      onClick={() => signIn(provider, { redirect: false })}
     >
       Continuar con {name}
       <Icon className="w-5 h-5" />
@@ -56,13 +56,13 @@ const SOCIAL_PROVIDERS: LoginOptionProps[] = [
   {
     name: "Facebook",
     icon: FaFacebook,
-    variant: "default",
+    variant: "secondary",
     provider: "facebook",
   },
   {
     name: "Github",
     icon: FaGithub,
-    variant: "secondary",
+    variant: "default",
     provider: "github",
   },
 ] as const;

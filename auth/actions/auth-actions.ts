@@ -21,7 +21,7 @@ interface UserResponse {
   id: string;
   name: string;
   email: string;
-  roleId: string | null;
+  role: string | null;
 }
 
 export const loginWithCredentialsAction = async (
@@ -73,7 +73,7 @@ export const createUserAction = async (
         id: true,
         name: true,
         email: true,
-        roleId: true,
+        role: true,
       },
     });
 
@@ -95,7 +95,7 @@ export const createUserAction = async (
 
 export const assignRoleAction = async (
   userId: string,
-  roleId: string
+  role: string
 ): Promise<ActionResponse> => {
   try {
     await prisma.user.update({
@@ -103,7 +103,7 @@ export const assignRoleAction = async (
         id: userId,
       },
       data: {
-        roleId,
+        role: role as any,
       },
     });
     return { ok: true };

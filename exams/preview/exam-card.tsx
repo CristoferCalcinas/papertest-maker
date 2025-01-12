@@ -54,7 +54,7 @@ export function ExamCard({
   onDelete,
   onStatusChange,
 }: ExamCardProps) {
-  const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+  const [isAnswerVisible, setIsAnswerVisible] = useState(true);
 
   const toggleAnswer = () => {
     setIsAnswerVisible(!isAnswerVisible);

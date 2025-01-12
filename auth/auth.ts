@@ -15,7 +15,8 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      roleId: string;
+      role: string;
+      subscription: string | null;
     } & DefaultSession["user"];
   }
 }
@@ -34,9 +35,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // console.log({ token, user, account, profile, isNewUser });
       const dbUser = await prisma.user.findUnique({
         where: { email: token.email ?? "no-email" },
+        include: { subscription: true },
       });
       token.id = dbUser?.id ?? "no-uuid";
-      token.roleId = dbUser?.roleId ?? "no-role-id";
+      token.role = dbUser?.role ?? "no-role-id";
+      token.subscription = dbUser?.subscription ?? null;
 
       return token;
     },
@@ -44,7 +47,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // console.log({ session, token, user });
       if (session && session.user) {
         session.user.id = token.id as string;
-        session.user.roleId = token.roleId as string;
+        session.user.role = token.role as string;
+        session.user.subscription = token.subscription as string | null;
       }
 
       return session;

@@ -22,12 +22,17 @@ const routeConfig = {
     title: "Crear Examen",
     isActive: false,
   },
+  "/exams/edit": {
+    title: "Editar Examen",
+    isActive: false,
+  },
 };
 
 export const BreadcrumbTitle = () => {
   const pathname = usePathname();
 
-  const currentRoute = routeConfig[pathname as keyof typeof routeConfig];
+  const currentRoute =
+    routeConfig[pathname.split("?")[0] as keyof typeof routeConfig];
 
   return (
     <Breadcrumb>

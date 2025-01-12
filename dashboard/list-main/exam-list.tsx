@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-import { FaArrowDownLong, FaArrowUpLong } from "react-icons/fa6";
-
 import { ExamCard } from "./exam-card";
 
 interface Exam {
@@ -42,17 +40,7 @@ const containerVariants = {
 };
 
 export const ExamList = ({ exams }: Props) => {
-  const [visibleCards, setVisibleCards] = useState(1);
-
-  const handleShowMore = () => {
-    setVisibleCards((prev) => Math.min(prev + 3, exams.length));
-  };
-
-  const handleShowLess = () => {
-    setVisibleCards(1);
-  };
-
-  const hasMoreCards = visibleCards < exams.length;
+  const [visibleCards, setVisibleCards] = useState(2);
 
   return (
     <section aria-label="Lista de exámenes" className="max-w-3xl mx-auto">
@@ -69,34 +57,6 @@ export const ExamList = ({ exams }: Props) => {
           ))}
         </motion.ul>
       </AnimatePresence>
-      <motion.div
-        className="mt-6 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        {hasMoreCards && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleShowMore}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black"
-            aria-label="Mostrar más exámenes"
-          >
-            Ver más &nbsp; <FaArrowDownLong />
-          </motion.button>
-        )}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleShowLess}
-          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md shadow-sm text-black disabled:opacity-50 disabled:cursor-not-allowed"
-          aria-label="Mostrar más exámenes"
-          disabled={visibleCards <= 1}
-        >
-          Ver menos &nbsp; <FaArrowUpLong />
-        </motion.button>
-      </motion.div>
     </section>
   );
 };
