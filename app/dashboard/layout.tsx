@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 
 import { SidebarLeft } from "@/components/sidebar-left";
 import { SidebarRight } from "@/components/sidebar-right";
@@ -28,10 +28,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-  if (!session?.user.role) {
-    redirect("/auth/select-role");
-  }
+  // const session = await auth();
+  // if (!session?.user.role) {
+  //   redirect("/auth/select-role");
+  // }
   return (
     <SidebarProvider>
       <SidebarLeft />
