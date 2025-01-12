@@ -1,50 +1,33 @@
-import { prisma } from "@/prisma";
-import { auth } from "@/auth";
-
 import { EmptyState } from "./empty/empty-state";
 import { ExamList } from "./list-main/exam-list";
 import { PageHeader } from "./header/page-header";
 import { StadisticsTabs } from "./dashboard-stadistics/stadistics-tabs";
 
-export const DashboardHome = async () => {
-  //? ELIMINAR cuando se implemente recibir los examenes por props
-  const session = await auth();
+interface Exam {
+  createdAt: string;
+  description: string;
+  grade: string;
+  id: string;
+  imageUrl: string;
+  lastModifiedAt: string;
+  questions: string;
+  subject: string;
+  title: string;
+}
 
-  const examtodb = await prisma.exam.findMany({
-    where: { userId: session!.user.id },
-    orderBy: { updatedAt: "desc" },
-    include: { questions: true },
-    take: 2,
-  });
+interface Props {
+  exams: Exam[];
+}
 
-  const formattedExams = examtodb.map((exam) => {
-    const questionCount = exam.questions.length;
-    const titleCapitalized =
-      exam.title.charAt(0).toUpperCase() + exam.title.slice(1);
-
-    return {
-      createdAt: exam.createdAt.toDateString(),
-      description: exam.description || "SIN-DESCRIPCION",
-      grade: exam.grade || "SIN-GRADO",
-      id: exam.id,
-      imageUrl: exam.imageUrl || "/pila-de-libros.jpg",
-      lastModifiedAt: exam.updatedAt.toDateString(),
-      questions: questionCount.toString(),
-      subject: exam.subject || "SIN-MATERIA",
-      title: titleCapitalized,
-    };
-  });
-
-  if (!formattedExams.length) {
+export const DashboardHome = ({ exams }: Props) => {
+  if (!exams.length) {
     return <EmptyState />;
   }
 
   return (
     <>
       <PageHeader />
-
-      <ExamList exams={formattedExams} />
-
+      <ExamList exams={exams} />
       <StadisticsTabs />
     </>
   );
