@@ -8,7 +8,6 @@ import {
   Calendar,
   Command,
   Home,
-  Inbox,
   MessageCircleQuestion,
   Search,
   Settings2,

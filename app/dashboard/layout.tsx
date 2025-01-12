@@ -29,7 +29,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  if (session?.user.roleId === "no-role-id") {
+  if (!session?.user.role) {
     redirect("/auth/select-role");
   }
   return (
