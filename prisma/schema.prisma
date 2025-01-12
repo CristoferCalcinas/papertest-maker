@@ -1,9 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// This is your Prisma schema file
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +6,25 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// --------- ENUMS ---------
+enum RecordStatus {
+  ACTIVE
+  HIDDEN
+  ARCHIVED
+  DELETED
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
 }
 
 enum Grade {
@@ -44,33 +58,31 @@ enum ExamStatus {
   ARCHIVED
 }
 
-enum UserRole {
-  STUDENT
-  TEACHER
-}
-
+// --------- AUTHENTICATION MODELS ---------
 model User {
-  id            String    @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String?
-  email         String    @unique
+  email         String       @unique
   password      String?
   emailVerified DateTime?
   image         String?
+  role          UserRole     @default(STUDENT)
+  status        RecordStatus @default(ACTIVE)
+  deletedAt     DateTime?
+
+  // Relaciones
   accounts      Account[]
   sessions      Session[]
-
-  role      UserRole @default(STUDENT)
-  isActive  Boolean  @default(true)
-
-  subscription Subscription?
-  projects     Project[]
-  exams        Exam[]
-
-  // Optional for WebAuthn support
   Authenticator Authenticator[]
+  subscription  Subscription?
+  projects      Project[]
+  exams         Exam[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
 }
 
 model Account {
@@ -78,20 +90,20 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
 
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@id([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -102,14 +114,17 @@ model Session {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
+  createdAt  DateTime @default(now())
 
-  @@id([identifier, token])
+  @@unique([identifier, token])
 }
 
 model Authenticator {
@@ -124,85 +139,127 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([userId, credentialID])
+  @@unique([userId, credentialID])
+  @@index([userId])
+  @@index([credentialID])
+}
+
+// --------- SUBSCRIPTION MODELS ---------
+model Plan {
+  id           String       @id @default(uuid())
+  name         String
+  description  String?
+  maxExams     Int
+  maxQuestions Int
+  price        Decimal
+  interval     String
+  features     Json?
+  status       RecordStatus @default(ACTIVE)
+  deletedAt    DateTime?
+
+  subscriptions Subscription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
 }
 
 model Subscription {
-  id        String             @id @default(uuid())
-  userId    String             @unique
-  user      User               @relation(fields: [userId], references: [id])
-  plan      Plan               @relation(fields: [planId], references: [id])
-  planId    String
-  startDate DateTime           @default(now())
-  endDate   DateTime
-  status    SubscriptionStatus @default(ACTIVE)
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+  id              String             @id @default(uuid())
+  userId          String             @unique
+  planId          String
+  startDate       DateTime           @default(now())
+  endDate         DateTime
+  status          SubscriptionStatus @default(ACTIVE)
+  recordStatus    RecordStatus       @default(ACTIVE) // Añadido para consistencia
+  deletedAt       DateTime?
+  cancelReason    String?
+  paymentId       String?
+  autoRenew       Boolean            @default(true)
+  lastBillingDate DateTime?
+  nextBillingDate DateTime?
+
+  // Relaciones
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([endDate])
+  @@index([recordStatus])
 }
 
-model Plan {
-  id            String         @id @default(uuid())
-  name          String
-  maxExams      Int
-  maxQuestions  Int
-  price         Decimal
-  subscriptions Subscription[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  CANCELLED
-  EXPIRED
-}
-
+// --------- CORE BUSINESS MODELS ---------
 model Project {
-  id          String   @id @default(uuid())
+  id          String       @id @default(uuid())
   name        String
   description String?
   userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  exams       Exam[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      RecordStatus @default(ACTIVE)
+  deletedAt   DateTime?
+
+  // Relaciones
+  user  User   @relation(fields: [userId], references: [id])
+  exams Exam[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
 }
 
 model Exam {
-  id          String      @id @default(uuid())
-  title       String
-  description String?
-  grade       Grade?      @default(OTHER)
-  subject     String?
-  imageUrl    String?
-  difficulty  Difficulty? @default(MEDIUM)
-  status      ExamStatus? @default(DRAFT)
-  isPublic    Boolean     @default(true)
+  id           String       @id @default(uuid())
+  title        String
+  description  String?
+  grade        Grade?       @default(OTHER)
+  subject      String?
+  imageUrl     String?
+  difficulty   Difficulty?  @default(MEDIUM)
+  examStatus   ExamStatus   @default(DRAFT)
+  isPublic     Boolean      @default(true)
+  status       RecordStatus @default(ACTIVE)
+  deletedAt    DateTime?
+  answersCount Int          @default(0)
 
+  // Relaciones
   projectId String?
-  project   Project?   @relation(fields: [projectId], references: [id])
   userId    String
+  project   Project?   @relation(fields: [projectId], references: [id])
   user      User       @relation(fields: [userId], references: [id])
   questions Question[]
 
-  answersCount Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
+  @@index([projectId])
   @@index([grade])
   @@index([subject])
+  @@index([status])
+  @@index([examStatus])
 }
 
 model Question {
-  id            String   @id @default(uuid())
+  id            String       @id @default(uuid())
   examId        String
-  exam          Exam     @relation(fields: [examId], references: [id])
-  question      String
-  correctAnswer String
+  question      String       @db.Text
+  correctAnswer String       @db.Text
   distractors   Json
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  status        RecordStatus @default(ACTIVE)
+  deletedAt     DateTime?
+
+  // Relaciones
+  exam Exam @relation(fields: [examId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([examId])
+  @@index([status])
 }
