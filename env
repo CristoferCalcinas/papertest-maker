@@ -2,12 +2,15 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/papertest_db"
 
 AUTH_SECRET="" #npx auth secret
 
+# https://github.com/settings/developers
 AUTH_GITHUB_ID={clientId}
 AUTH_GITHUB_SECRET={clientSecret}
 
+# console.cloud.google.com/apis/dashboard
 AUTH_GOOGLE_ID={CLIENT_ID}
 AUTH_GOOGLE_SECRET={CLIENT_SECRET}
 
+# https://developers.facebook.com/apps/creation
 AUTH_FACEBOOK_ID=""
 AUTH_FACEBOOK_SECRET=""
 
